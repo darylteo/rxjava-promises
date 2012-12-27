@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Mod-promises by darylteo</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Mod-promises</h1>
+        <p>Promises library for Vert.x based on Q for Node.JS</p>
+
+        <p class="view"><a href="https://github.com/darylteo/mod-promises">View the Project on GitHub <small>darylteo/mod-promises</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/darylteo/mod-promises/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/darylteo/mod-promises/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/darylteo/mod-promises">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Promises for Vert.x</h1>
+
+<h2>Why</h2>
+
+<p>Because <a href="http://callbackhell.com/">Callback Hell</a>.</p>
+
+<p>Vert.x is a relatively new platform utilising the event loop, usable by multiple languages (and not just Javascript). These languages do not play very well with nested levels of callbacks creating a mess of callbacks that are difficult to read and maintain.</p>
+
+<h2>How</h2>
+
+<p>Promises aims to flatten these "Callback Pyramids" in a way that is both readable and maintainable.</p>
+
+<p>As an example, you can turn this:</p>
+
+<pre><code>asyncStep1(new Handler&lt;String&gt;(){
+  public void handle(String value){
+    ...
+    asyncStep2(new Handler&lt;String&gt;(){
+      public void handle(String value){
+        ...
+        asyncStep3(new Handler&lt;String&gt;(){
+          public void handle(String value){
+            ...
+          }
+        })
+      }
+    });
+  }
+});
+</code></pre>
+
+<p>Into This:</p>
+
+<pre><code>Promise&lt;Void&gt; promise = asyncGetString()
+  .then(new RepromiseHandler&lt;String, String&gt;() {
+    public Promise&lt;String&gt; handle(final String result) {
+      ...
+    }
+  })
+  .then(new PromiseHandler&lt;String, String&gt;() {
+    public Void handle(String result) {
+      ...
+    }
+  })
+  .then(new PromiseHandler&lt;String, Void&gt;() {
+    public Void handle(String result) {
+      ...
+    }
+  });
+</code></pre>
+
+<h2>Why Not Java Futures/JavaFlow/Continuations?</h2>
+
+<p>All of the above technologies are blocking (i.e. the executing Thread has to wait before returning, making them incompatible with the Vert.x event loop. The goal of this project was to implement a non-blocking Promises api that is built on the event loop, even in a multi-core environment, by guaranteeing the sequence of handlers that are run.</p>
+
+<h2>Language Support</h2>
+
+<p>I plan to support all supported Vert.x languages, however only Java is supported at present.</p>
+
+<h2>Inspiration</h2>
+
+<p>Most of the concepts comes from Kris Kowal's <a href="//github.com/kriskowal/q">Q</a> CommonJS module. Major liberties and workarounds were made to get it to play nicely with Java.</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/darylteo">darylteo</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
