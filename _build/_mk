@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# compile
+jekyll
+
+# clean deploy directory
+pushd ..
+ls | grep -v _build | xargs rm -r
+popd
+
+# deploy and clean up
+cp -r _site/ ../
+rm -r _site
