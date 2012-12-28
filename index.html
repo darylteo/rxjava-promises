@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Mod-promises by darylteo</title>
+    <title>mod-promises for Vert.X by Daryl Teo - </title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
@@ -28,17 +28,17 @@
         </ul>
       </header>
       <section>
-        <h1>Promises for Vert.x</h1>
+        <h1 id='promises_for_vertx'>Promises for Vert.x</h1>
 
-<h2>Why</h2>
+<h2 id='why'>Why</h2>
 
-<p>Because <a href="http://callbackhell.com/">Callback Hell</a>.</p>
+<p>Because <a href='http://callbackhell.com/'>Callback Hell</a>.</p>
 
 <p>Vert.x is a relatively new platform utilising the event loop, usable by multiple languages (and not just Javascript). These languages do not play very well with nested levels of callbacks creating a mess of callbacks that are difficult to read and maintain.</p>
 
-<h2>How</h2>
+<h2 id='how'>How</h2>
 
-<p>Promises aims to flatten these "Callback Pyramids" in a way that is both readable and maintainable.</p>
+<p>Promises aims to flatten these &#8220;Callback Pyramids&#8221; in a way that is both readable and maintainable.</p>
 
 <p>As an example, you can turn this:</p>
 
@@ -52,12 +52,11 @@
           public void handle(String value){
             ...
           }
-        })
+        });
       }
     });
   }
-});
-</code></pre>
+});</code></pre>
 
 <p>Into This:</p>
 
@@ -76,27 +75,26 @@
     public Void handle(String result) {
       ...
     }
-  });
-</code></pre>
+  });</code></pre>
 
-<h2>Why Not Java Futures/JavaFlow/Continuations?</h2>
+<h2 id='why_not_java_futuresjavaflowcontinuations'>Why Not Java Futures/JavaFlow/Continuations?</h2>
 
 <p>All of the above technologies are blocking (i.e. the executing Thread has to wait before returning, making them incompatible with the Vert.x event loop. The goal of this project was to implement a non-blocking Promises api that is built on the event loop, even in a multi-core environment, by guaranteeing the sequence of handlers that are run.</p>
 
-<h2>Language Support</h2>
+<h2 id='language_support'>Language Support</h2>
 
 <p>I plan to support all supported Vert.x languages, however only Java is supported at present.</p>
 
-<h2>Inspiration</h2>
+<h2 id='inspiration'>Inspiration</h2>
 
-<p>Most of the concepts comes from Kris Kowal's <a href="//github.com/kriskowal/q">Q</a> CommonJS module. Major liberties and workarounds were made to get it to play nicely with Java.</p>
+<p>Most of the concepts comes from Kris Kowal&#8217;s <a href='//github.com/kriskowal/q'>Q</a> CommonJS module. Major liberties and workarounds were made to get it to play nicely with Java.</p>
       </section>
       <footer>
-        <p>This project is maintained by <a href="https://github.com/darylteo">darylteo</a></p>
+        <p>This project is maintained by <a href="https://github.com/darylteo">Daryl Teo</a></p>
         <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
       </footer>
     </div>
     <script src="javascripts/scale.fix.js"></script>
-    
+
   </body>
 </html>
