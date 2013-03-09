@@ -1,0 +1,17 @@
+import com.darylteo.gradle.VertxModulePlugin
+
+buildscript {
+  repositories {
+    mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+    mavenLocal()
+  }
+
+  dependencies {
+    classpath "com.darylteo:vertx-gradle-plugin:1.0.0-SNAPSHOT"
+  }
+}
+
+subprojects {
+  apply plugin: VertxModulePlugin
+}
