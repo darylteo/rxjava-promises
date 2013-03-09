@@ -1,4 +1,4 @@
-package org.edgeframework.promises.test;
+package com.darylteo.promises.test;
 
 import static org.vertx.testtools.VertxAssert.assertEquals;
 import static org.vertx.testtools.VertxAssert.assertNotNull;
@@ -10,10 +10,6 @@ import static org.vertx.testtools.VertxAssert.testComplete;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.edgeframework.promises.FailureHandler;
-import org.edgeframework.promises.Promise;
-import org.edgeframework.promises.PromiseHandler;
-import org.edgeframework.promises.RepromiseHandler;
 import org.junit.Test;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.SimpleHandler;
@@ -21,7 +17,12 @@ import org.vertx.testtools.TestVerticle;
 
 import rx.util.functions.Action1;
 
-public class PromiseTestClient extends TestVerticle {
+import com.darylteo.promises.FailureHandler;
+import com.darylteo.promises.Promise;
+import com.darylteo.promises.PromiseHandler;
+import com.darylteo.promises.RepromiseHandler;
+
+public class PromiseTests extends TestVerticle {
 
   @Test
   public void testDefer() throws Exception {

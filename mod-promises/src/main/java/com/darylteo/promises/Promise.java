@@ -1,4 +1,4 @@
-package org.edgeframework.promises;
+package com.darylteo.promises;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

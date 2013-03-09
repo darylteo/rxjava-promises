@@ -1,4 +1,4 @@
-import com.darylteo.gradle.VertxModulePlugin
+import com.darylteo.gradle.VertxPlugin
 
 buildscript {
   repositories {
@@ -13,5 +13,5 @@ buildscript {
 }
 
 subprojects {
-  apply plugin: VertxModulePlugin
+  apply plugin: VertxPlugin
 }

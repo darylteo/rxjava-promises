@@ -1,1 +1,1 @@
-include 'mod-promises'
+include 'mod-promises', 'mod-promises-js'
