@@ -18,15 +18,26 @@ function test_defer() {
 }
 
 function test_basic() {
-  var promise = promises.defer()
+  var promise = makePromise()
     .then(function(message){
       vassert.assertEquals("Deferred message received incorrectly", 'Hello World', message);
+      return message + "!!!"
+    })
+    .then(function(message){
+      console.log('Handler: ' + message);
+      vassert.assertEquals("Deferred message received incorrectly", 'Hello World!!!', message);
       vassert.testComplete();
     });
+}
+
+function makePromise(){
+  var promise = promises.defer();
 
   vertx.runOnLoop(function(){
     promise.fulfill('Hello World');
   });
+
+  return promise;
 }
 
 initTests(this);
