@@ -1,5 +1,5 @@
 module.exports = {
   "defer" : function() {
-    return com.darylteo.promises.Promise.defer();
+    return new com.darylteo.promises.js.Promise();
   }
 }
