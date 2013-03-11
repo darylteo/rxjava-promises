@@ -15,12 +15,12 @@ import org.vertx.java.core.Handler;
 import org.vertx.java.core.SimpleHandler;
 import org.vertx.testtools.TestVerticle;
 
+import rx.util.functions.Action0;
 import rx.util.functions.Action1;
+import rx.util.functions.Func0;
+import rx.util.functions.Func1;
 
-import com.darylteo.promises.FailureHandler;
 import com.darylteo.promises.Promise;
-import com.darylteo.promises.PromiseHandler;
-import com.darylteo.promises.RepromiseHandler;
 
 public class PromiseTests extends TestVerticle {
 
@@ -46,12 +46,11 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testBasic() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseHandler<String, Void>() {
+        .then(new Action1<String>() {
           @Override
-          public Void handle(String result) {
+          public void call(String result) {
             assertEquals(result, "Hello World", result);
             testComplete();
-            return null;
           }
         });
   }
@@ -60,18 +59,17 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testChain1() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseHandler<String, String>() {
+        .then(new Func1<String, String>() {
           @Override
-          public String handle(String result) {
+          public String call(String result) {
             return result.toUpperCase();
           }
         })
-        .then(new PromiseHandler<String, Void>() {
+        .then(new Action1<String>() {
           @Override
-          public Void handle(String result) {
+          public void call(String result) {
             assertEquals(result, "HELLO WORLD", result);
             testComplete();
-            return null;
           }
         });
   }
@@ -80,18 +78,17 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testChain2() throws Exception {
     makePromise("Hello World")
-        .then(new RepromiseHandler<String, String>() {
+        .then(new Func1<String, Promise<String>>() {
           @Override
-          public Promise<String> handle(final String result) {
+          public Promise<String> call(final String result) {
             return makePromise("Foo Bar");
           }
         })
-        .then(new PromiseHandler<String, Void>() {
+        .then(new Action1<String>() {
           @Override
-          public Void handle(String result) {
+          public void call(String result) {
             assertEquals(result, "Foo Bar", result);
             testComplete();
-            return null;
           }
         });
   }
@@ -100,24 +97,23 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testChain3() throws Exception {
     makePromise("Hello World")
-        .then(new RepromiseHandler<String, String>() {
+        .then(new Func1<String, Promise<String>>() {
           @Override
-          public Promise<String> handle(final String result) {
+          public Promise<String> call(final String result) {
             return makePromise("Foo Bar");
           }
         })
-        .fail(new FailureHandler<String>() {
+        .fail(new Func1<Exception, String>() {
           @Override
-          public String handle(Exception e) {
+          public String call(Exception e) {
             return "fail";
           }
         })
-        .then(new PromiseHandler<String, Void>() {
+        .then(new Action1<String>() {
           @Override
-          public Void handle(String result) {
+          public void call(String result) {
             assertEquals(result, "Foo Bar", result);
             testComplete();
-            return null;
           }
         });
   }
@@ -127,22 +123,20 @@ public class PromiseTests extends TestVerticle {
     Promise<String> mainPromise = makePromise("Hello World");
     final CountDownLatch latch = new CountDownLatch(2);
 
-    mainPromise.then(new PromiseHandler<String, Void>() {
+    mainPromise.then(new Action1<String>() {
       @Override
-      public Void handle(String result) {
+      public void call(String result) {
         System.out.println("Before");
         assertEquals(latch.getCount(), 2);
         latch.countDown();
-        return null;
       }
     });
-    mainPromise.then(new PromiseHandler<String, Void>() {
+    mainPromise.then(new Action1<String>() {
       @Override
-      public Void handle(String result) {
+      public void call(String result) {
         System.out.println("After");
         assertEquals(latch.getCount(), 1);
         testComplete();
-        return null;
       }
     });
   }
@@ -151,23 +145,23 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testException1() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseHandler<String, Character>() {
+        .then(new Func1<String, Character>() {
           @Override
-          public Character handle(String result) {
+          public Character call(String result) {
             return result.charAt(20); // Exception
           }
         }).then(
-            new PromiseHandler<Character, Void>() {
+            new Func1<Character, Void>() {
               @Override
-              public Void handle(Character value) {
+              public Void call(Character value) {
                 fail("Promise not correctly calling failure handler when exception or rejection occurs");
                 testComplete();
                 return null;
               }
             },
-            new FailureHandler<Void>() {
+            new Func1<Exception, Void>() {
               @Override
-              public Void handle(Exception e) {
+              public Void call(Exception e) {
                 System.out.println(e);
                 assertTrue("Exception is not StringIndexOutOfBoundsException", e instanceof StringIndexOutOfBoundsException);
                 testComplete();
@@ -181,15 +175,15 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testException2() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseHandler<String, Character>() {
+        .then(new Func1<String, Character>() {
           @Override
-          public Character handle(String result) {
+          public Character call(String result) {
             return result.charAt(20); // Exception
           }
         }).fail(
-            new FailureHandler<Void>() {
+            new Func1<Exception, Void>() {
               @Override
-              public Void handle(Exception e) {
+              public Void call(Exception e) {
                 assertTrue(e instanceof StringIndexOutOfBoundsException);
                 testComplete();
                 return null;
@@ -203,24 +197,24 @@ public class PromiseTests extends TestVerticle {
   public void testException3() throws Exception {
     makePromise("Hello World")
         .then(
-            new PromiseHandler<String, Character>() {
+            new Func1<String, Character>() {
               @Override
-              public Character handle(String result) {
+              public Character call(String result) {
                 return result.charAt(20); // Exception
               }
             },
-            new FailureHandler<Character>() {
+            new Func1<Exception, Character>() {
               @Override
-              public Character handle(Exception e) {
+              public Character call(Exception e) {
                 fail("This rejection handler should not be called!");
                 testComplete();
                 return null;
               }
             }
         ).fail(
-            new FailureHandler<Void>() {
+            new Func1<Exception, Void>() {
               @Override
-              public Void handle(Exception e) {
+              public Void call(Exception e) {
                 assertTrue(e instanceof StringIndexOutOfBoundsException);
                 testComplete();
                 return null;
@@ -235,34 +229,33 @@ public class PromiseTests extends TestVerticle {
     final AtomicBoolean flag = new AtomicBoolean(false);
 
     makePromise("Hello World")
-        .then(new PromiseHandler<String, Character>() {
+        .then(new Func1<String, Character>() {
           @Override
-          public Character handle(String result) {
+          public Character call(String result) {
             return result.charAt(20); // Exception
           }
         }).then(
-            new PromiseHandler<Character, String>() {
+            new Func1<Character, String>() {
               @Override
-              public String handle(Character value) {
+              public String call(Character value) {
                 fail("Promise not correctly calling failure handler when exception or rejection occurs");
                 testComplete();
                 return "The Char is : " + value;
               }
             },
-            new FailureHandler<String>() {
+            new Func1<Exception, String>() {
               @Override
-              public String handle(Exception value) {
+              public String call(Exception value) {
                 flag.set(true);
                 return null;
               }
             }
-        ).then(new PromiseHandler<String, Void>() {
+        ).then(new Action1<String>() {
           @Override
-          public Void handle(String value) {
+          public void call(String value) {
             assertNull(value);
             assertTrue("FailureHandler was not called", flag.get());
             testComplete();
-            return null;
           }
         });
   }
@@ -270,15 +263,15 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testException5() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseHandler<String, Character>() {
+        .then(new Func1<String, Character>() {
           @Override
-          public Character handle(String result) {
+          public Character call(String result) {
             return result.charAt(20); // Exception
           }
         })
-        .then(new PromiseHandler<Character, Void>() {
+        .then(new Func1<Character, Void>() {
           @Override
-          public Void handle(Character value) {
+          public Void call(Character value) {
             fail("Promise should not execute this due to exception");
             testComplete();
             return null;
@@ -292,23 +285,23 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testException7() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseHandler<String, Character>() {
+        .then(new Func1<String, Character>() {
           @Override
-          public Character handle(String result) {
+          public Character call(String result) {
             return result.charAt(20); // Exception
           }
         })
-        .then(new PromiseHandler<Character, Void>() {
+        .then(new Func1<Character, Void>() {
           @Override
-          public Void handle(Character value) {
+          public Void call(Character value) {
             fail("Promise should not execute this due to exception");
             testComplete();
             return null;
           }
         })
-        .fail(new FailureHandler<Void>() {
+        .fail(new Func1<Exception, Void>() {
           @Override
-          public Void handle(Exception e) {
+          public Void call(Exception e) {
             assertTrue(e instanceof StringIndexOutOfBoundsException);
             testComplete();
             return null;
@@ -320,17 +313,16 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testFinally1() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseHandler<String, Character>() {
+        .then(new Func1<String, Character>() {
           @Override
-          public Character handle(String result) {
+          public Character call(String result) {
             return result.charAt(0);
           }
         })
-        .fin(new PromiseHandler<Void, Void>() {
+        .fin(new Action0() {
           @Override
-          public Void handle(Void value) {
+          public void call() {
             testComplete();
-            return null;
           }
         });
   }
@@ -339,17 +331,16 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testFinally2() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseHandler<String, Character>() {
+        .then(new Func1<String, Character>() {
           @Override
-          public Character handle(String result) {
+          public Character call(String result) {
             return result.charAt(20);
           }
         })
-        .fin(new PromiseHandler<Void, Void>() {
+        .fin(new Action0() {
           @Override
-          public Void handle(Void value) {
+          public void call() {
             testComplete();
-            return null;
           }
         });
   }
@@ -360,22 +351,22 @@ public class PromiseTests extends TestVerticle {
     final AtomicBoolean flag = new AtomicBoolean(false);
 
     makePromise("Hello World")
-        .then(new PromiseHandler<String, Character>() {
+        .then(new Func1<String, Character>() {
           @Override
-          public Character handle(String result) {
+          public Character call(String result) {
             return result.charAt(0);
           }
         })
-        .fin(new PromiseHandler<Void, String>() {
+        .fin(new Func0<String>() {
           @Override
-          public String handle(Void value) {
+          public String call() {
             flag.set(true);
             return "HelloWorld";
           }
         })
-        .then(new PromiseHandler<Character, Void>() {
+        .then(new Func1<Character, Void>() {
           @Override
-          public Void handle(Character value) {
+          public Void call(Character value) {
             // value from promise must pass through
             // finally handler must fire
             // finally return value must be ignored
@@ -393,26 +384,25 @@ public class PromiseTests extends TestVerticle {
     final AtomicBoolean flag = new AtomicBoolean(false);
 
     makePromise("Hello World")
-        .then(new PromiseHandler<String, Character>() {
+        .then(new Func1<String, Character>() {
           @Override
-          public Character handle(String result) {
+          public Character call(String result) {
             return result.charAt(20);
           }
         })
-        .fin(new PromiseHandler<Void, String>() {
+        .fin(new Func0<String>() {
           @Override
-          public String handle(Void value) {
+          public String call() {
             flag.set(true);
             return "Finally!";
           }
         })
-        .fail(new FailureHandler<Void>() {
+        .fail(new Action1<Exception>() {
           @Override
-          public Void handle(Exception reason) {
+          public void call(Exception reason) {
             assertTrue(reason instanceof StringIndexOutOfBoundsException);
             assertTrue(flag.get());
             testComplete();
-            return null;
           }
         });
   }
@@ -423,12 +413,11 @@ public class PromiseTests extends TestVerticle {
 
     p.fulfill("Hello World");
 
-    p.then(new PromiseHandler<String, Void>() {
+    p.then(new Action1<String>() {
       @Override
-      public Void handle(String value) {
+      public void call(String value) {
         assertEquals(value, "Hello World");
         testComplete();
-        return null;
       }
     });
   }

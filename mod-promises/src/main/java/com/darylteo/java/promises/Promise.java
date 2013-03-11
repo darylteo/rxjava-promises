@@ -1,4 +1,4 @@
-package com.darylteo.promises;
+package com.darylteo.java.promises;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -10,7 +10,6 @@ import rx.Observer;
 import rx.Subscription;
 import rx.util.AtomicObservableSubscription;
 import rx.util.functions.Func1;
-import rx.util.functions.Functions;
 
 /**
  * A Promise represents a request that will be fulfilled sometime in the future,
@@ -79,54 +78,40 @@ public class Promise<T> extends Observable<T> {
   }
 
   /* Defer Methods */
-  public <O> Promise<O> then(Object onFulfilled) {
+  public <O> Promise<O> then(PromiseHandler<T, O> onFulfilled) {
     return this._then(onFulfilled, null, null);
   }
 
-  public <O> Promise<O> then(Object onFulfilled, Object onRejected) {
+  public <O> Promise<O> then(PromiseHandler<T, O> onFulfilled, FailureHandler<?> onRejected) {
     return this._then(onFulfilled, onRejected, null);
   }
 
-  public <O> Promise<O> fail(Object onRejected) {
+  public <O> Promise<O> then(RepromiseHandler<T, O> onFulfilled) {
+    return this._then(onFulfilled, null, null);
+  }
+
+  public <O> Promise<O> then(RepromiseHandler<T, O> onFulfilled, FailureHandler<O> onRejected) {
+    return this._then(onFulfilled, onRejected, null);
+  }
+
+  public <O> Promise<O> fail(FailureHandler<O> onRejected) {
     return this._then(null, onRejected, null);
   }
 
-  public Promise<T> fin(Object onFinally) {
+  public Promise<T> fin(PromiseHandler<Void, ?> onFinally) {
     return this._then(null, null, onFinally);
   }
 
   private <O> Promise<O> _then(
-      final Object onFulfilled,
-      final Object onRejected,
-      final Object onFinally)
+      final CompletedHandler<T> onFulfilled,
+      final CompletedHandler<Exception> onRejected,
+      final CompletedHandler<Void> onFinally)
   {
     final Promise<O> promise = Promise.defer();
-
-    // Create the Observer
     Observer<T> observer = new Observer<T>() {
-      private T value = null;
-
       @Override
       public void onCompleted() {
-        Object result = null;
-
-        try {
-          this.callFinally();
-
-          if (onFulfilled == null) {
-            // We don't have a handler so we'll just forward on
-            // We have to assume that the casting will work...
-            promise.fulfill((O) this.value);
-            return;
-          } else {
-            // if fin() is called, then onFulfilled would be null
-            result = Functions.from(onFulfilled).call(this.value);
-          }
-        } catch (Exception e) {
-          result = e;
-        }
-
-        this.evalResult(result);
+        // No op
       }
 
       @Override
@@ -135,7 +120,15 @@ public class Promise<T> extends Observable<T> {
         Object result = null;
 
         try {
-          this.callFinally();
+          // Perform any finally handlers
+          if (onFinally != null) {
+            result = onFinally.handle(null);
+
+            // results from fin() handler is ignored
+            if (!(result instanceof Promise)) {
+              result = null;
+            }
+          }
 
           if (onRejected == null) {
             // We don't have a handler so we'll just forward on
@@ -143,36 +136,50 @@ public class Promise<T> extends Observable<T> {
             promise.reject(reason);
             return;
           } else {
-            result = Functions.from(onRejected).call(reason);
+            result = onRejected.handle(reason);
           }
         } catch (Exception e) {
           result = e;
         }
 
-        this.evalResult(result);
+        if (result instanceof Promise) {
+          ((Promise<O>) result).become(promise);
+        } else if (result instanceof Exception) {
+          promise.reject((Exception) result);
+        } else {
+          promise.fulfill((O) result);
+        }
       }
 
       @Override
+      @SuppressWarnings("unchecked")
       public void onNext(T value) {
-        this.value = value;
-      }
-
-      private Object callFinally() {
         Object result = null;
-        if (onFinally != null) {
-          result = Functions.from(onFinally).call();
-          System.out.println(result);
-          // results from fin() handler is ignored
-          if (!(result instanceof Promise)) {
-            result = null;
+
+        try {
+          // Perform any finally handlers
+          if (onFinally != null) {
+            result = onFinally.handle(null);
+
+            // results from fin() handler is ignored
+            if (!(result instanceof Promise)) {
+              result = null;
+            }
           }
+
+          if (onFulfilled == null) {
+            // We don't have a handler so we'll just forward on
+            // We have to assume that the casting will work...
+            promise.fulfill((O) value);
+            return;
+          } else {
+            // if fin() is called, then onFulfilled would be null
+            result = onFulfilled.handle(value);
+          }
+        } catch (Exception e) {
+          result = e;
         }
 
-        return result;
-      }
-
-      @SuppressWarnings("unchecked")
-      private void evalResult(Object result) {
         if (result instanceof Promise) {
           ((Promise<O>) result).become(promise);
         } else if (result instanceof Exception) {
@@ -184,12 +191,8 @@ public class Promise<T> extends Observable<T> {
     };
 
     this.subscribe(observer);
-
-    // Immediately notify observer if result of this promise has already been
-    // determined
     if (this.state == STATE.FULFILLED) {
       observer.onNext(this.value);
-      observer.onCompleted();
     } else if (this.state == STATE.REJECTED) {
       observer.onError(this.reason);
     }

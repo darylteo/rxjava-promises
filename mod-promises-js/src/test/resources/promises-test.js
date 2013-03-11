@@ -24,10 +24,21 @@ function test_basic() {
       return message + "!!!"
     })
     .then(function(message){
-      console.log('Handler: ' + message);
       vassert.assertEquals("Deferred message received incorrectly", 'Hello World!!!', message);
       vassert.testComplete();
     });
+}
+
+function test_repromise() {
+  var promise = makePromise()
+    .then(function(message){
+      return makePromise();
+    })
+    .then(function(message){
+      vassert.assertEquals("Deferred message received incorrectly", 'Hello World', message);
+      vassert.testComplete();
+    });
+
 }
 
 function makePromise(){
