@@ -15,17 +15,14 @@ import org.vertx.java.core.Handler;
 import org.vertx.java.core.SimpleHandler;
 import org.vertx.testtools.TestVerticle;
 
-import rx.util.functions.Action0;
-import rx.util.functions.Action1;
-import rx.util.functions.Func0;
-import rx.util.functions.Func1;
-
+import com.darylteo.promises.FinallyAction;
 import com.darylteo.promises.FinallyFunction;
 import com.darylteo.promises.Promise;
 import com.darylteo.promises.PromiseAction;
 import com.darylteo.promises.PromiseFunction;
+import com.darylteo.promises.RepromiseFunction;
 
-public class PromiseTests extends TestVerticle {
+public class PromiseTestsStrict extends TestVerticle {
 
   @Test
   public void testDefer() throws Exception {
@@ -49,7 +46,7 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testBasic() throws Exception {
     makePromise("Hello World")
-        .then(new Action1<String>() {
+        .then(new PromiseAction<String>() {
           @Override
           public void call(String result) {
             assertEquals(result, "Hello World", result);
@@ -62,13 +59,13 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testChain1() throws Exception {
     makePromise("Hello World")
-        .then(new Func1<String, String>() {
+        .then(new PromiseFunction<String, String>() {
           @Override
           public String call(String result) {
             return result.toUpperCase();
           }
         })
-        .then(new Action1<String>() {
+        .then(new PromiseAction<String>() {
           @Override
           public void call(String result) {
             assertEquals(result, "HELLO WORLD", result);
@@ -81,13 +78,13 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testChain2() throws Exception {
     makePromise("Hello World")
-        .then(new Func1<String, Promise<String>>() {
+        .then(new RepromiseFunction<String, String>() {
           @Override
           public Promise<String> call(final String result) {
             return makePromise(result + " Foo Bar");
           }
         })
-        .then(new Action1<String>() {
+        .then(new PromiseAction<String>() {
           @Override
           public void call(String result) {
             assertEquals(result, "Hello World Foo Bar", result);
@@ -100,20 +97,20 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testChain3() throws Exception {
     makePromise("Hello World")
-        .then(new Func1<String, Promise<String>>() {
+        .then(new RepromiseFunction<String, String>() {
           @Override
           public Promise<String> call(final String result) {
             return makePromise(result + " Foo Bar");
           }
         })
-        .fail(new Func1<Exception, String>() {
+        .fail(new PromiseFunction<Exception, String>() {
           @Override
           public String call(Exception e) {
             fail("This should not occur");
             return "fail";
           }
         })
-        .then(new Action1<String>() {
+        .then(new PromiseAction<String>() {
           @Override
           public void call(String result) {
             assertEquals(result, "Hello World Foo Bar", result);
@@ -127,7 +124,7 @@ public class PromiseTests extends TestVerticle {
     Promise<String> mainPromise = makePromise("Hello World");
     final CountDownLatch latch = new CountDownLatch(2);
 
-    mainPromise.then(new Action1<String>() {
+    mainPromise.then(new PromiseAction<String>() {
       @Override
       public void call(String result) {
         System.out.println("Before");
@@ -135,7 +132,7 @@ public class PromiseTests extends TestVerticle {
         latch.countDown();
       }
     });
-    mainPromise.then(new Action1<String>() {
+    mainPromise.then(new PromiseAction<String>() {
       @Override
       public void call(String result) {
         System.out.println("After");
@@ -149,20 +146,20 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testException1() throws Exception {
     makePromise("Hello World")
-        .then(new Func1<String, Character>() {
+        .then(new PromiseFunction<String, Character>() {
           @Override
           public Character call(String result) {
             return result.charAt(20); // Exception
           }
         }).then(
-            new Action1<Character>() {
+            new PromiseAction<Character>() {
               @Override
               public void call(Character value) {
                 fail("Promise not correctly calling failure handler when exception or rejection occurs");
                 testComplete();
               }
             },
-            new Action1<Exception>() {
+            new PromiseAction<Exception>() {
               @Override
               public void call(Exception e) {
                 System.out.println(e);
@@ -177,13 +174,13 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testException2() throws Exception {
     makePromise("Hello World")
-        .then(new Func1<String, Character>() {
+        .then(new PromiseFunction<String, Character>() {
           @Override
           public Character call(String result) {
             return result.charAt(20); // Exception
           }
         }).fail(
-            new Action1<Exception>() {
+            new PromiseAction<Exception>() {
               @Override
               public void call(Exception e) {
                 assertTrue(e instanceof StringIndexOutOfBoundsException);
@@ -198,22 +195,21 @@ public class PromiseTests extends TestVerticle {
   public void testException3() throws Exception {
     makePromise("Hello World")
         .then(
-            new Func1<String, Character>() {
+            new PromiseFunction<String, Character>() {
               @Override
               public Character call(String result) {
                 return result.charAt(20); // Exception
               }
             },
-            new Func1<Exception, Character>() {
+            new PromiseAction<Exception>() {
               @Override
-              public Character call(Exception e) {
+              public void call(Exception e) {
                 fail("This rejection handler should not be called!");
                 testComplete();
-                return null;
               }
             }
         ).fail(
-            new Action1<Exception>() {
+            new PromiseAction<Exception>() {
               @Override
               public void call(Exception e) {
                 assertTrue(e instanceof StringIndexOutOfBoundsException);
@@ -229,13 +225,13 @@ public class PromiseTests extends TestVerticle {
     final AtomicBoolean flag = new AtomicBoolean(false);
 
     makePromise("Hello World")
-        .then(new Func1<String, Character>() {
+        .then(new PromiseFunction<String, Character>() {
           @Override
           public Character call(String result) {
             return result.charAt(20); // Exception
           }
         }).then(
-            new Func1<Character, String>() {
+            new PromiseFunction<Character, String>() {
               @Override
               public String call(Character value) {
                 fail("Promise not correctly calling failure handler when exception or rejection occurs");
@@ -243,13 +239,14 @@ public class PromiseTests extends TestVerticle {
                 return "The Char is : " + value;
               }
             },
-            new Action1<Exception>() {
+            new PromiseFunction<Exception, String>() {
               @Override
-              public void call(Exception value) {
+              public String call(Exception value) {
                 flag.set(true);
+                return null;
               }
             }
-        ).then(new Action1<String>() {
+        ).then(new PromiseAction<String>() {
           @Override
           public void call(String value) {
             assertNull(value);
@@ -262,13 +259,13 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testException5() throws Exception {
     makePromise("Hello World")
-        .then(new Func1<String, Character>() {
+        .then(new PromiseFunction<String, Character>() {
           @Override
           public Character call(String result) {
             return result.charAt(20); // Exception
           }
         })
-        .then(new Action1<Character>() {
+        .then(new PromiseAction<Character>() {
           @Override
           public void call(Character value) {
             fail("Promise should not execute this due to exception");
@@ -283,20 +280,20 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testException7() throws Exception {
     makePromise("Hello World")
-        .then(new Func1<String, Character>() {
+        .then(new PromiseFunction<String, Character>() {
           @Override
           public Character call(String result) {
             return result.charAt(20); // Exception
           }
         })
-        .then(new Action1<Character>() {
+        .then(new PromiseAction<Character>() {
           @Override
           public void call(Character value) {
             fail("Promise should not execute this due to exception");
             testComplete();
           }
         })
-        .fail(new Action1<Exception>() {
+        .fail(new PromiseAction<Exception>() {
           @Override
           public void call(Exception e) {
             assertTrue(e instanceof StringIndexOutOfBoundsException);
@@ -309,13 +306,13 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testFinally1() throws Exception {
     makePromise("Hello World")
-        .then(new Func1<String, Character>() {
+        .then(new PromiseFunction<String, Character>() {
           @Override
           public Character call(String result) {
             return result.charAt(0);
           }
         })
-        .fin(new Action0() {
+        .fin(new FinallyAction() {
           @Override
           public void call() {
             testComplete();
@@ -327,13 +324,13 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testFinally2() throws Exception {
     makePromise("Hello World")
-        .then(new Func1<String, Character>() {
+        .then(new PromiseFunction<String, Character>() {
           @Override
           public Character call(String result) {
             return result.charAt(20);
           }
         })
-        .fin(new Action0() {
+        .fin(new FinallyAction() {
           @Override
           public void call() {
             testComplete();
@@ -347,20 +344,19 @@ public class PromiseTests extends TestVerticle {
     final AtomicBoolean flag = new AtomicBoolean(false);
 
     makePromise("Hello World")
-        .then(new Func1<String, Character>() {
+        .then(new PromiseFunction<String, Character>() {
           @Override
           public Character call(String result) {
             return result.charAt(0);
           }
         })
-        .fin(new Func0<String>() {
+        .fin(new FinallyAction() {
           @Override
-          public String call() {
+          public void call() {
             flag.set(true);
-            return "HelloWorld";
           }
         })
-        .then(new Action1<Character>() {
+        .then(new PromiseAction<Character>() {
           @Override
           public void call(Character value) {
             // value from promise must pass through
@@ -421,20 +417,19 @@ public class PromiseTests extends TestVerticle {
     final AtomicBoolean flag = new AtomicBoolean(false);
 
     makePromise("Hello World")
-        .then(new Func1<String, Character>() {
+        .then(new PromiseFunction<String, Character>() {
           @Override
           public Character call(String result) {
             return result.charAt(20);
           }
         })
-        .fin(new Func0<String>() {
+        .fin(new FinallyAction() {
           @Override
-          public String call() {
+          public void call() {
             flag.set(true);
-            return "Finally!";
           }
         })
-        .fail(new Action1<Exception>() {
+        .fail(new PromiseAction<Exception>() {
           @Override
           public void call(Exception reason) {
             assertTrue(reason instanceof StringIndexOutOfBoundsException);
@@ -450,7 +445,7 @@ public class PromiseTests extends TestVerticle {
 
     p.fulfill("Hello World");
 
-    p.then(new Action1<String>() {
+    p.then(new PromiseAction<String>() {
       @Override
       public void call(String value) {
         assertEquals(value, "Hello World");
@@ -462,7 +457,7 @@ public class PromiseTests extends TestVerticle {
   @Test
   public void testRxBasic() {
     makePromise("Hello World")
-        .subscribe(new Action1<String>() {
+        .subscribe(new PromiseAction<String>() {
           @Override
           public void call(String value) {
             assertEquals(value, "Hello World");

@@ -4,8 +4,8 @@ import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
 
-import com.darylteo.java.promises.FailureHandler;
-import com.darylteo.java.promises.PromiseHandler;
+import com.darylteo.promises.FailureFunction;
+import com.darylteo.promises.java.PromiseHandler;
 
 public class Promise {
   private com.darylteo.promises.Promise<Object> _promise;
@@ -79,8 +79,8 @@ public class Promise {
     };
   }
 
-  private FailureHandler<Object> failureHandler(final Function function) {
-    return new FailureHandler<Object>() {
+  private FailureFunction<Object> failureHandler(final Function function) {
+    return new FailureFunction<Object>() {
       @Override
       public Object handle(Exception e) {
         return invoke(function, e);
