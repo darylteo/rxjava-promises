@@ -20,6 +20,7 @@ function test_defer() {
 function test_basic() {
   var promise = makePromise()
     .then(function(message){
+      console.log("Javascript got : " + message);
       vassert.assertEquals("Deferred message received incorrectly", 'Hello World', message);
       return message + "!!!"
     })

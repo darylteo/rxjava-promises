@@ -276,6 +276,7 @@ public class Promise<T> extends Observable<T> implements Observer<T> {
           if (that.state == STATE.FULFILLED) {
             if (onFulfilled != null) {
               Object result = Functions.from(onFulfilled).call(that.value);
+              System.out.println("Java result from handler: " + result);
               evalResult(result);
             } else {
               // Sends the value forward. We assume that the casting will pass
@@ -341,8 +342,12 @@ public class Promise<T> extends Observable<T> implements Observer<T> {
     // A copy of the observers is taken first, in case more observers are added
     // after.
     List<Observer<T>> observerList = new ArrayList<>(this.observers.values());
-
+    System.out.println("Value: " + value);
+    System.out.println(this);
+    System.out.println("this.value: " + this.value);
     for (Observer<T> obs : observerList) {
+      System.out.println(this);
+      System.out.println("Push " + this.value);
       obs.onNext(this.value);
       obs.onCompleted();
     }
