@@ -382,6 +382,7 @@ public class PromiseTests extends TestVerticle {
         .then(new PromiseFunction<String, Character>() {
           @Override
           public Character call(String result) {
+            System.out.println(result);
             return result.charAt(0);
           }
         })

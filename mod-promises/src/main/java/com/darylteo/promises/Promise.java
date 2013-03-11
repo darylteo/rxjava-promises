@@ -62,7 +62,7 @@ import rx.util.functions.Functions;
  * @param T
  *          - the data type of the result contained by this Promise.
  */
-public class Promise<T> extends Observable<T> {
+public class Promise<T> extends Observable<T> implements Observer<T> {
   private static enum STATE {
     PENDING,
     FULFILLED,
@@ -92,8 +92,7 @@ public class Promise<T> extends Observable<T> {
               @Override
               public void unsubscribe() {
                 // on unsubscribe remove it from the map of outbound observers
-                // to
-                // notify
+                // to notify
                 observers.remove(subscription);
               }
             });
@@ -212,84 +211,106 @@ public class Promise<T> extends Observable<T> {
       final Object onRejected,
       final Object onFinally)
   {
-    final Promise<O> promise = Promise.defer();
+    // This is the next promise in the chain.
+    // The handlers you see below will resolve their values and forward them to
+    // this promise.
+    final Promise<O> deferred = Promise.defer();
 
     // Create the Observer
-    Observer<T> observer = new Observer<T>() {
-      private T value = null;
-
+    final Observer<T> observer = new Observer<T>() {
       @Override
       public void onCompleted() {
-        Object result = null;
-
-        try {
-          this.callFinally();
-
-          if (onFulfilled == null) {
-            // We don't have a handler so we'll just forward on
-            // We have to assume that the casting will work...
-            promise.fulfill((O) this.value);
-            return;
-          } else {
-            // if fin() is called, then onFulfilled would be null
-            result = Functions.from(onFulfilled).call(this.value);
-          }
-        } catch (Exception e) {
-          result = e;
-        }
-
-        this.evalResult(result);
+        this.evaluate();
       }
 
       @Override
       public void onError(Exception reason) {
-        Object result = null;
-
-        try {
-          this.callFinally();
-
-          if (onRejected == null) {
-            // We don't have a handler so we'll just forward on
-            // We have to assume that the casting will work...
-            promise.reject(reason);
-            return;
-          } else {
-            result = Functions.from(onRejected).call(reason);
-          }
-        } catch (Exception e) {
-          result = e;
-        }
-
-        this.evalResult(result);
+        that.reason = reason;
+        this.evaluate();
       }
 
       @Override
       public void onNext(T value) {
-        this.value = value;
+        that.value = value;
       }
 
-      private Object callFinally() {
-        Object result = null;
-        if (onFinally != null) {
-          result = Functions.from(onFinally).call();
-          System.out.println(result);
-          // results from fin() handler is ignored
-          if (!(result instanceof Promise)) {
-            result = null;
+      private void evaluate() {
+        try {
+          // onfinally and onFulfilled/onRejected are mutually exclusive
+          if (onFinally != null) {
+            Object result = Functions.from(onFinally).call();
+
+            if (result != null) {
+              // the finally block returned a promise, so we need to delay
+              // fulfillment of the next promise until the returned promise is
+              // fulfilled
+              ((Promise<Void>) result).then(
+                  new PromiseAction<Void>() {
+                    @Override
+                    public void call(Void v) {
+                      deferred.fulfill((O) that.value);
+                    }
+                  }, new PromiseAction<Exception>() {
+                    @Override
+                    public void call(Exception e) {
+                      deferred.reject(e);
+                    }
+                  });
+            } else {
+              // nothing was returned by the finally block. We can go ahead and
+              // forward the value/reason held by this promise on to the next
+              // one for resolution
+              if (that.state == STATE.FULFILLED) {
+                deferred.fulfill((O) that.value);
+              } else {
+                deferred.reject(that.reason);
+              }
+            }
+
+            return;
+          } // end Finally block
+
+          // No finally block was provided, thus we need to evaluate fulfillment
+          // or rejection. If the appropriate handler is not provided, it is
+          // forwarded to the next promise
+          if (that.state == STATE.FULFILLED) {
+            if (onFulfilled != null) {
+              Object result = Functions.from(onFulfilled).call(that.value);
+              evalResult(result);
+            } else {
+              // Sends the value forward. We assume that the casting will pass
+              deferred.fulfill((O) that.value);
+            }
+            return;
           }
-        }
 
-        return result;
+          if (that.state == STATE.REJECTED) {
+            if (onRejected != null) {
+              // Allow this handler to recover from the rejection
+              Object result = Functions.from(onRejected).call(that.reason);
+              evalResult(result);
+            } else {
+              // Forward it to the next promise
+              deferred.reject(that.reason);
+            }
+            return;
+          }
+        } catch (Exception e) {
+          // On any exception in the handlers above, we should throw the
+          // exception to the next promise
+
+          deferred.reject(e);
+        }
       }
 
+      // takes a result and either converts it to a promise or sends it forward
+      // for fulfillment
       @SuppressWarnings("unchecked")
       private void evalResult(Object result) {
         if (result instanceof Promise) {
-          ((Promise<O>) result).become(promise);
-        } else if (result instanceof Exception) {
-          promise.reject((Exception) result);
+          deferred.become((Promise<O>) result);
         } else {
-          promise.fulfill((O) result);
+          deferred.fulfill((O) result);
         }
       }
     };
@@ -305,7 +326,7 @@ public class Promise<T> extends Observable<T> {
       observer.onError(this.reason);
     }
 
-    return promise;
+    return deferred;
   }
 
   /* Result Methods */
@@ -320,6 +341,7 @@ public class Promise<T> extends Observable<T> {
     // A copy of the observers is taken first, in case more observers are added
     // after.
     List<Observer<T>> observerList = new ArrayList<>(this.observers.values());
+
     for (Observer<T> obs : observerList) {
       obs.onNext(this.value);
       obs.onCompleted();
@@ -341,6 +363,25 @@ public class Promise<T> extends Observable<T> {
   }
 
   public void become(Promise<T> other) {
-    this.observers.putAll(other.observers);
+    other.subscribe(this);
+  }
+
+  @Override
+  public void onCompleted() {
+    // no op
+  }
+
+  @Override
+  public void onError(Exception e) {
+    this.reject(e);
+  }
+
+  @Override
+  public void onNext(T value) {
+    // Grab only the first value
+    // Ignore others if they come in
+    if (this.state == STATE.PENDING) {
+      this.fulfill(value);
+    }
   }
 }

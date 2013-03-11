@@ -362,7 +362,7 @@ public class PromiseTestsStrict extends TestVerticle {
             // value from promise must pass through
             // finally handler must fire
             // finally return value must be ignored
-            assertEquals(value, new Character('H'));
+            assertEquals("Wrong value passed after calling finally", value, new Character('H'));
             assertTrue(flag.get());
             testComplete();
           }
@@ -385,7 +385,6 @@ public class PromiseTestsStrict extends TestVerticle {
           @Override
           public Promise<Void> call() {
             final Promise<Void> promise = Promise.defer();
-
             vertx.runOnLoop(new SimpleHandler() {
               @Override
               protected void handle() {
@@ -404,7 +403,7 @@ public class PromiseTestsStrict extends TestVerticle {
             // finally handler must fire
             // finally return value must be ignored
             // then must fire only after finally has fulfilled promise
-            assertEquals(value, new Character('H'));
+            assertEquals("Wrong value passed after calling finally", value, new Character('H'));
             assertTrue(flag.get());
             testComplete();
           }
