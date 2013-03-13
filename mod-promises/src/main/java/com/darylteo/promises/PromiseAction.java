@@ -2,4 +2,4 @@ package com.darylteo.promises;
 
 import rx.util.functions.Action1;
 
-public interface PromiseAction<I> extends Action1<I> {}
+public abstract class PromiseAction<I> implements Action1<I> {}

@@ -2,5 +2,4 @@ package com.darylteo.promises;
 
 import rx.util.functions.Func1;
 
-public interface PromiseFunction<I, O> extends Func1<I, O> {}
-
+public abstract class PromiseFunction<I, O> implements Func1<I, O> {}
