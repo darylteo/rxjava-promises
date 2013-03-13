@@ -20,11 +20,11 @@ function test_defer() {
 function test_basic() {
   makePromise()
     .then(function(message){
-      vassert.assertEquals("Deferred message received incorrectly", 'Hello World', message);
+      vassert.assertTrue("Deferred message received incorrectly", 'Hello World' == message);
       return message + "!!!"
     })
     .then(function(message){
-      vassert.assertEquals("Deferred message received incorrectly", 'Hello World!!!', message);
+      vassert.assertTrue("Deferred message received incorrectly", 'Hello World!!!' == message);
       vassert.testComplete();
     });
 }
@@ -35,7 +35,7 @@ function test_repromise() {
       return makePromise();
     })
     .then(function(message){
-      vassert.assertEquals("Deferred message received incorrectly", 'Hello World', message);
+      vassert.assertTrue("Deferred message received incorrectly", 'Hello World' == message);
       vassert.testComplete();
     });
 }
@@ -56,13 +56,15 @@ function test_failure() {
 function test_error() {
   makePromise()
     .then(function(message){
-      throw new Error('Ahh Error Occurred! Just testing...');
+      throw new Error('Ahh!!!');
     })
     .then(function(message){
       vassert.fail('This code should not be reached');
     })
     .fail(function(error){
       vassert.assertNotNull(error);
+      console.log(error.message);
+      vassert.assertTrue(error.message == 'Ahh!!!');
     })
     .fin(function(){
       vassert.testComplete();
