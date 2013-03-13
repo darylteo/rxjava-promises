@@ -40,16 +40,28 @@ function test_repromise() {
     });
 }
 
-function test_others() {
-  makePromise()
+function test_failure() {
+  makeFailPromise()
     .then(function(message){
-      throw new Error("Ahh!");
-    })
-    .then(function(message){
-      vassert.fail();
+      vassert.fail('This code should not be reached');
     })
     .fail(function(error){
-      console.log(error);
+      vassert.assertNotNull(error);
+    })
+    .fin(function(){
+      vassert.testComplete();
+    })
+}
+
+function test_error() {
+  makePromise()
+    .then(function(message){
+      throw new Error('Ahh Error Occurred! Just testing...');
+    })
+    .then(function(message){
+      vassert.fail('This code should not be reached');
+    })
+    .fail(function(error){
       vassert.assertNotNull(error);
     })
     .fin(function(){
@@ -62,6 +74,16 @@ function makePromise(){
 
   vertx.runOnLoop(function(){
     promise.fulfill('Hello World');
+  });
+
+  return promise;
+}
+
+function makeFailPromise(){
+  var promise = promises.defer();
+
+  vertx.runOnLoop(function(){
+    promise.reject('Connection timed out!');
   });
 
   return promise;
