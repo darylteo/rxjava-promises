@@ -71,6 +71,20 @@ function test_error() {
     })
 }
 
+function test_scope() {
+  var _message = "Hello";
+
+  makePromise()
+    .then(function(message){
+      _message = message;
+    }).then(function(){
+      vassert.assertEquals("Scoped variable not correct!", "Hello World", _message);
+    }).fin(function(){
+      vassert.assertEquals("Scoped variable not correct!", "Hello World", _message);
+      vassert.testComplete();
+    })
+}
+
 function makePromise(){
   var promise = promises.defer();
 
