@@ -28,16 +28,17 @@ import rx.util.functions.Functions;
  * promise.</li>
  * <li>If the promise cannot be fulfilled for some reason, it is then rejected.
  * onRejected is called with the reason for the rejection</li>
- * <li>If onFinally is provided, it is called before onFulfilled or onRejected</li>
  * <li>A promise may be further deferred, at which point a new promise is
  * provided. This can lead to a chain of promises.</li>
- * <li>If a promise if fulfilled, but onFulfilled is not provided, then its
- * value is passed to the next promise.</li>
- * <li>If a promise is rejected, but onRejected is not provided, then each
- * subsequent promise is rejected until onRejected is called</li>
- * <li>Either onFulfilled, or onRejected may be a Repromise. When this happens,
- * the subsequently created promise will be fulfilled with the value of the
- * repromise.</li>
+ * <li>If a promise if fulfilled, but onFulfilled is not provided, then the
+ * promise is fulfilled with the same value.</li>
+ * <li>If a promise is rejected, but onRejected is not provided, then the next
+ * promise is rejected with the same reason</li>
+ * <li>If onFinally is provided, it is resolved first before either fulfilling
+ * or rejecting the next promise (see previous two points)
+ * <li>Either onFulfilled, or onRejected may return a new promise (i.e. a
+ * repromise) . When this happens, the subsequently created promise will be
+ * fulfilled with the value of the repromise when it is eventually fulfilled.</li>
  * </ul>
  * 
  * <strong>Type-Safe Rules</strong>
@@ -45,14 +46,14 @@ import rx.util.functions.Functions;
  * <li>All the type-safety rules are related to the output type of onFulfilled.</li>
  * <li>If onFulfilled returns type T, then onRejected must either return T, or
  * null. This is facilitated through the use of PromiseFunction, and
- * PromiseAction respectively</li>
+ * PromiseAction respectively.</li>
  * <li>As per the previous rule, if onFulfilled is an PromiseAction, then
  * onRejected must also be an PromiseAction.</li>
  * <li>You may use a RepromiseFunction in place of a PromiseFunction that
  * returns T.</li>
  * <li>If onFulfilled is not provided, it is assumed that it is defined in a
  * future handler. As such, onRejected may not change the return type.</li>
- * <li>onFinally must be an Repromise or an Action. It does not accept any
+ * <li>onFinally must be a Repromise or an Action. It does not accept any
  * values. This is facilitated through the use of FinallyFunction and
  * FinallyAction respectively.</li>
  * </ul>
@@ -364,7 +365,7 @@ public class Promise<T> extends Observable<T> implements Observer<T> {
   public void reject(Object reason) {
     this.reject(new Exception(reason.toString()));
   }
-  
+
   public void become(Promise<T> other) {
     other.subscribe(this);
   }
