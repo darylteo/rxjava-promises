@@ -18,9 +18,8 @@ function test_defer() {
 }
 
 function test_basic() {
-  var promise = makePromise()
+  makePromise()
     .then(function(message){
-      console.log("Javascript got : " + message);
       vassert.assertEquals("Deferred message received incorrectly", 'Hello World', message);
       return message + "!!!"
     })
@@ -31,7 +30,7 @@ function test_basic() {
 }
 
 function test_repromise() {
-  var promise = makePromise()
+  makePromise()
     .then(function(message){
       return makePromise();
     })
@@ -39,7 +38,23 @@ function test_repromise() {
       vassert.assertEquals("Deferred message received incorrectly", 'Hello World', message);
       vassert.testComplete();
     });
+}
 
+function test_others() {
+  makePromise()
+    .then(function(message){
+      throw new Error("Ahh!");
+    })
+    .then(function(message){
+      vassert.fail();
+    })
+    .fail(function(error){
+      console.log(error);
+      vassert.assertNotNull(error);
+    })
+    .fin(function(){
+      vassert.testComplete();
+    })
 }
 
 function makePromise(){

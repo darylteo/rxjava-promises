@@ -307,7 +307,6 @@ public class Promise<T> extends Observable<T> implements Observer<T> {
       // for fulfillment
       @SuppressWarnings("unchecked")
       private void evalResult(Object result) {
-        System.out.println("Result is : " + result);
         if (result instanceof Promise) {
           deferred.become((Promise<O>) result);
         } else {
