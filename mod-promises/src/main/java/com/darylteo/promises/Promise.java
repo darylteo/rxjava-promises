@@ -361,8 +361,8 @@ public class Promise<T> extends Observable<T> implements Observer<T> {
     }
   }
 
-  public void reject(String reason) {
-    this.reject(new Exception(reason));
+  public void reject(Object reason) {
+    this.reject(new Exception(reason.toString()));
   }
   
   public void become(Promise<T> other) {
