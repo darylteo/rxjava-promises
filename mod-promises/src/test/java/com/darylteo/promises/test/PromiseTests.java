@@ -11,12 +11,10 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.SimpleHandler;
 
 import rx.util.functions.Action0;
 import rx.util.functions.Action1;
-import rx.util.functions.Func0;
 import rx.util.functions.Func1;
 
 import com.darylteo.promises.FinallyFunction;
@@ -352,11 +350,10 @@ public class PromiseTests extends PromiseTestBase {
             return result.charAt(0);
           }
         })
-        .fin(new Func0<String>() {
+        .fin(new Action0() {
           @Override
-          public String call() {
+          public void call() {
             flag.set(true);
-            return "HelloWorld";
           }
         })
         .then(new Action1<Character>() {
@@ -427,11 +424,10 @@ public class PromiseTests extends PromiseTestBase {
             return result.charAt(20);
           }
         })
-        .fin(new Func0<String>() {
+        .fin(new Action0() {
           @Override
-          public String call() {
+          public void call() {
             flag.set(true);
-            return "Finally!";
           }
         })
         .fail(new Action1<Exception>() {

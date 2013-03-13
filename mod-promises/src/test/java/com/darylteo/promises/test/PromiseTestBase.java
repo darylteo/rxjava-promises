@@ -8,7 +8,7 @@ import org.vertx.testtools.TestVerticle;
 
 import com.darylteo.promises.Promise;
 
-public class PromiseTestBase extends TestVerticle {
+public abstract class PromiseTestBase extends TestVerticle {
   protected Promise<String> makePromise(final String message) {
     final Promise<String> promise = Promise.defer();
 
