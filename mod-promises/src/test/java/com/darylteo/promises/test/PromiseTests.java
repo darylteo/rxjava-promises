@@ -13,7 +13,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Test;
 import org.vertx.java.core.Handler;
 import org.vertx.java.core.SimpleHandler;
-import org.vertx.testtools.TestVerticle;
 
 import rx.util.functions.Action0;
 import rx.util.functions.Action1;
@@ -25,7 +24,7 @@ import com.darylteo.promises.Promise;
 import com.darylteo.promises.PromiseAction;
 import com.darylteo.promises.PromiseFunction;
 
-public class PromiseTests extends TestVerticle {
+public class PromiseTests extends PromiseTestBase {
 
   @Test
   public void testDefer() throws Exception {
@@ -455,53 +454,6 @@ public class PromiseTests extends TestVerticle {
       @Override
       public void call(String value) {
         assertEquals(value, "Hello World");
-        testComplete();
-      }
-    });
-  }
-
-  @Test
-  public void testRxBasic() {
-    makePromise("Hello World")
-        .subscribe(new Action1<String>() {
-          @Override
-          public void call(String value) {
-            assertEquals(value, "Hello World");
-            testComplete();
-          }
-        });
-
-  }
-
-  private Promise<String> makePromise(final String message) {
-    final Promise<String> promise = Promise.defer();
-
-    vertx.runOnLoop(new SimpleHandler() {
-      @Override
-      public void handle() {
-        System.out.print("Working.");
-        for (int i = 0; i < 10; i++) {
-          System.out.print(".");
-
-          try {
-            Thread.sleep(100);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-        }
-
-        System.out.println();
-        promise.fulfill(message);
-      }
-    });
-
-    return promise;
-  }
-
-  private void endLater() {
-    vertx.setTimer(2l, new Handler<Long>() {
-      @Override
-      public void handle(Long event) {
         testComplete();
       }
     });

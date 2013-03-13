@@ -22,7 +22,7 @@ import com.darylteo.promises.PromiseAction;
 import com.darylteo.promises.PromiseFunction;
 import com.darylteo.promises.RepromiseFunction;
 
-public class PromiseTestsStrict extends TestVerticle {
+public class PromiseTestsStrict extends PromiseTestBase {
 
   @Test
   public void testDefer() throws Exception {
@@ -448,53 +448,6 @@ public class PromiseTestsStrict extends TestVerticle {
       @Override
       public void call(String value) {
         assertEquals(value, "Hello World");
-        testComplete();
-      }
-    });
-  }
-
-  @Test
-  public void testRxBasic() {
-    makePromise("Hello World")
-        .subscribe(new PromiseAction<String>() {
-          @Override
-          public void call(String value) {
-            assertEquals(value, "Hello World");
-            testComplete();
-          }
-        });
-
-  }
-
-  private Promise<String> makePromise(final String message) {
-    final Promise<String> promise = Promise.defer();
-
-    vertx.runOnLoop(new SimpleHandler() {
-      @Override
-      public void handle() {
-        System.out.print("Working.");
-        for (int i = 0; i < 10; i++) {
-          System.out.print(".");
-
-          try {
-            Thread.sleep(100);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
-        }
-
-        System.out.println();
-        promise.fulfill(message);
-      }
-    });
-
-    return promise;
-  }
-
-  private void endLater() {
-    vertx.setTimer(2l, new Handler<Long>() {
-      @Override
-      public void handle(Long event) {
         testComplete();
       }
     });
