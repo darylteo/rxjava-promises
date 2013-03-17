@@ -1,1 +1,1 @@
-include 'mod-promises', 'mod-promises-js'
+include 'rxjava-promises', 'mod-promises', 'mod-promises-js'

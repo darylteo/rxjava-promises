@@ -1,0 +1,5 @@
+println 'Mod-Promises Build.gradle'
+
+dependencies {
+  compile project(':rxjava-promises')
+}
