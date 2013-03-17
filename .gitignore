@@ -6,6 +6,7 @@
 .settings
 .yardoc
 .yardopts
+.tmp
 bin
 build
 target

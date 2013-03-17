@@ -1,4 +1,0 @@
-[vert.x-core-thread-1] 01:14:43,944 INFO [org.vertx.java.platform.impl.resolver.HttpResolution]  Downloading io.vertx~lang-rhino~1.0.0-SNAPSHOT. Please wait...
-[vert.x-worker-thread-0] 01:14:50,116 INFO [org.vertx.java.platform.impl.DefaultPlatformManager]  Move from: /Volumes/MacintoshHD/workspaces/vertx/mods/mod-promises/.tmp/vertx-eb27fbfd-121d-4b19-af32-43437a732852
-[vert.x-worker-thread-0] 01:14:50,116 INFO [org.vertx.java.platform.impl.DefaultPlatformManager]  Move to: /Volumes/MacintoshHD/workspaces/vertx/vertx/build/vert.x-2.0.0-SNAPSHOT/sys-mods/io.vertx~lang-rhino~1.0.0-SNAPSHOT
-[vert.x-worker-thread-0] 01:14:50,119 INFO [org.vertx.java.platform.impl.DefaultPlatformManager]  Module io.vertx~lang-rhino~1.0.0-SNAPSHOT successfully installed
