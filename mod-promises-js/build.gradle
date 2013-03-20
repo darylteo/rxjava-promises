@@ -19,6 +19,7 @@ Please edit the details below.
  */
 ext.configurePom = { def pom ->
   pom.project {
+    name 'RxJava Promises - Vertx Module (JS)'
     description 'Promises module for Vert.x - JS Shim'
     inceptionYear '2013'
     url 'http://github.com/darylteo/mod-promises'

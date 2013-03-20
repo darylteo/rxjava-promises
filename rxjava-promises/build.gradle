@@ -26,10 +26,10 @@ Please edit the details below.
  */
 ext.configurePom = { def pom ->
   pom.project {
-    description 'Promises module for Vert.x'
+    name 'RxJava Promises'
+    description 'Promises implementation for RxJava'
     inceptionYear '2013'
     url 'http://github.com/darylteo/mod-promises'
-    packaging 'zip'
 
     developers {
       developer {
