@@ -1,3 +1,35 @@
 dependencies {
   compile project(':rxjava-promises')
 }
+
+ext.configurePom = { def pom ->
+  pom.project {
+    description 'Promises module for Vert.x - JS Shim'
+    inceptionYear '2013'
+    url 'http://github.com/darylteo/mod-promises'
+
+    developers {
+      developer {
+        id 'darylteo'
+        name 'Daryl Teo'
+        email 'i.am@darylteo.com'
+      }
+    }
+
+    scm {
+      url 'http://github.com/darylteo/mod-promises'
+    }
+
+    licenses {
+      license {
+        name 'The Apache Software License, Version 2.0'
+        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+        distribution 'repo'
+      }
+    }
+
+    properties {
+      setProperty('project.build.sourceEncoding', 'UTF8')
+    }
+  }
+}

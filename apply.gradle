@@ -8,7 +8,7 @@ buildscript {
   }
 
   dependencies {
-    classpath "com.darylteo:vertx-gradle-plugin:1.0.0-SNAPSHOT"
+    classpath "com.darylteo:vertx-gradle-plugin:1.0.0-R1-SNAPSHOT"
   }
 }
 

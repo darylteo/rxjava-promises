@@ -24,7 +24,7 @@ test {
 If you're uploading stuff to Maven, Gradle needs to generate a POM.
 Please edit the details below.
  */
-def configurePom(def pom) {
+ext.configurePom = { def pom ->
   pom.project {
     description 'Promises module for Vert.x'
     inceptionYear '2013'
