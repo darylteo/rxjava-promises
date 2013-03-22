@@ -1,0 +1,51 @@
+dependencies {
+  /*
+  Add your module jar dependencies here
+  E.g.
+  compile "com.foo:foo-lib:1.0.1" - for compile time deps - this will end up in your module too!
+  testCompile "com.foo:foo-lib:1.0.1" - for test time deps
+  provided "com.foo:foo-lib:1.0.1" - if you DON'T want it to be packaged in the module zip
+   */
+
+  provided 'org.mozilla:rhino:1.7R4'
+  compile project(':vertx-promises')
+
+  testCompile "com.netflix.rxjava:rxjava-core:0.5.0"
+}
+
+/*
+If you're uploading stuff to Maven, Gradle needs to generate a POM.
+Please edit the details below.
+ */
+ext.configurePom = { def pom ->
+  pom.project {
+    name 'RxJava Promises - Vertx Module (JS)'
+    description 'Promises module for Vert.x - JS Shim'
+    inceptionYear '2013'
+    url 'http://github.com/darylteo/mod-promises'
+
+    developers {
+      developer {
+        id 'darylteo'
+        name 'Daryl Teo'
+        email 'i.am@darylteo.com'
+      }
+    }
+
+    scm {
+      url 'http://github.com/darylteo/mod-promises'
+    }
+
+    licenses {
+      license {
+        name 'The Apache Software License, Version 2.0'
+        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+        distribution 'repo'
+      }
+    }
+
+    properties {
+      setProperty('project.build.sourceEncoding', 'UTF8')
+    }
+  }
+}
