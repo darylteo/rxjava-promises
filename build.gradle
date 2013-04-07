@@ -1,1 +1,16 @@
-apply from: 'apply.gradle'
+import com.darylteo.gradle.vertx.VertxPlugin
+
+buildscript {
+  repositories {
+    mavenLocal() // testing purposes only
+    mavenCentral()
+    maven { url 'https://oss.sonatype.org/content/repositories/releases' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+  }
+
+  dependencies {
+    classpath 'com.darylteo:vertx-gradle-plugin:1.0.0-ALPHA2'
+  }
+}
+
+apply plugin: VertxPlugin
