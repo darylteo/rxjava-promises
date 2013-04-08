@@ -24,12 +24,12 @@ test {
 If you're uploading stuff to Maven, Gradle needs to generate a POM.
 Please edit the details below.
  */
-ext.configurePom = { def pom ->
-  pom.project {
+uploadArchives {
+  repositories.mavenDeployer.pom.project {
     name 'RxJava Promises'
     description 'Promises implementation for RxJava'
     inceptionYear '2013'
-    url 'http://github.com/darylteo/mod-promises'
+    url 'http://github.com/darylteo/rxjava-promises'
 
     developers {
       developer {
@@ -40,7 +40,7 @@ ext.configurePom = { def pom ->
     }
 
     scm {
-      url 'http://github.com/darylteo/mod-promises'
+      url 'http://github.com/darylteo/rxjava-promises'
     }
 
     licenses {
