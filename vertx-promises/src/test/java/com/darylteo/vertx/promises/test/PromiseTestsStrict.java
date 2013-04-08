@@ -11,9 +11,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
-import org.vertx.java.core.Handler;
 import org.vertx.java.core.SimpleHandler;
-import org.vertx.testtools.TestVerticle;
 
 import com.darylteo.rx.promises.FinallyAction;
 import com.darylteo.rx.promises.FinallyFunction;
