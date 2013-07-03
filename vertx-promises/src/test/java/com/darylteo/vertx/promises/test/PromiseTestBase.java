@@ -3,7 +3,6 @@ package com.darylteo.vertx.promises.test;
 import static org.vertx.testtools.VertxAssert.testComplete;
 
 import org.vertx.java.core.Handler;
-import org.vertx.java.core.SimpleHandler;
 import org.vertx.testtools.TestVerticle;
 
 import com.darylteo.rx.promises.Promise;
@@ -12,9 +11,9 @@ public abstract class PromiseTestBase extends TestVerticle {
   protected Promise<String> makePromise(final String message) {
     final Promise<String> promise = Promise.defer();
 
-    vertx.runOnLoop(new SimpleHandler() {
+    vertx.runOnContext(new Handler<Void>() {
       @Override
-      public void handle() {
+      public void handle(Void event) {
         System.out.print("Working.");
         for (int i = 0; i < 10; i++) {
           System.out.print(".");

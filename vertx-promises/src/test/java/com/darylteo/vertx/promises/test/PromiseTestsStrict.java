@@ -11,7 +11,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
-import org.vertx.java.core.SimpleHandler;
+import org.vertx.java.core.Handler;
 
 import com.darylteo.rx.promises.FinallyAction;
 import com.darylteo.rx.promises.FinallyFunction;
@@ -44,77 +44,77 @@ public class PromiseTestsStrict extends PromiseTestBase {
   @Test
   public void testBasic() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseAction<String>() {
-          @Override
-          public void call(String result) {
-            assertEquals(result, "Hello World", result);
-            testComplete();
-          }
-        });
+      .then(new PromiseAction<String>() {
+        @Override
+        public void call(String result) {
+          assertEquals(result, "Hello World", result);
+          testComplete();
+        }
+      });
   }
 
   /* Test of Handlers - return Value */
   @Test
   public void testChain1() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseFunction<String, String>() {
-          @Override
-          public String call(String result) {
-            return result.toUpperCase();
-          }
-        })
-        .then(new PromiseAction<String>() {
-          @Override
-          public void call(String result) {
-            assertEquals(result, "HELLO WORLD", result);
-            testComplete();
-          }
-        });
+      .then(new PromiseFunction<String, String>() {
+        @Override
+        public String call(String result) {
+          return result.toUpperCase();
+        }
+      })
+      .then(new PromiseAction<String>() {
+        @Override
+        public void call(String result) {
+          assertEquals(result, "HELLO WORLD", result);
+          testComplete();
+        }
+      });
   }
 
   /* Chain of handlers - return Promise */
   @Test
   public void testChain2() throws Exception {
     makePromise("Hello World")
-        .then(new RepromiseFunction<String, String>() {
-          @Override
-          public Promise<String> call(final String result) {
-            return makePromise(result + " Foo Bar");
-          }
-        })
-        .then(new PromiseAction<String>() {
-          @Override
-          public void call(String result) {
-            assertEquals(result, "Hello World Foo Bar", result);
-            testComplete();
-          }
-        });
+      .then(new RepromiseFunction<String, String>() {
+        @Override
+        public Promise<String> call(final String result) {
+          return makePromise(result + " Foo Bar");
+        }
+      })
+      .then(new PromiseAction<String>() {
+        @Override
+        public void call(String result) {
+          assertEquals(result, "Hello World Foo Bar", result);
+          testComplete();
+        }
+      });
   }
 
   /* Chain of handlers - forwarding on */
   @Test
   public void testChain3() throws Exception {
     makePromise("Hello World")
-        .then(new RepromiseFunction<String, String>() {
-          @Override
-          public Promise<String> call(final String result) {
-            return makePromise(result + " Foo Bar");
-          }
-        })
-        .fail(new PromiseFunction<Exception, String>() {
-          @Override
-          public String call(Exception e) {
-            fail("This should not occur");
-            return "fail";
-          }
-        })
-        .then(new PromiseAction<String>() {
-          @Override
-          public void call(String result) {
-            assertEquals(result, "Hello World Foo Bar", result);
-            testComplete();
-          }
-        });
+      .then(new RepromiseFunction<String, String>() {
+        @Override
+        public Promise<String> call(final String result) {
+          return makePromise(result + " Foo Bar");
+        }
+      })
+      .fail(new PromiseFunction<Exception, String>() {
+        @Override
+        public String call(Exception e) {
+          fail("This should not occur");
+          return "fail";
+        }
+      })
+      .then(new PromiseAction<String>() {
+        @Override
+        public void call(String result) {
+          assertEquals(result, "Hello World Foo Bar", result);
+          testComplete();
+        }
+      });
   }
 
   @Test
@@ -144,77 +144,77 @@ public class PromiseTestsStrict extends PromiseTestBase {
   @Test
   public void testException1() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseFunction<String, Character>() {
+      .then(new PromiseFunction<String, Character>() {
+        @Override
+        public Character call(String result) {
+          return result.charAt(20); // Exception
+        }
+      }).then(
+        new PromiseAction<Character>() {
           @Override
-          public Character call(String result) {
-            return result.charAt(20); // Exception
+          public void call(Character value) {
+            fail("Promise not correctly calling failure handler when exception or rejection occurs");
+            testComplete();
           }
-        }).then(
-            new PromiseAction<Character>() {
-              @Override
-              public void call(Character value) {
-                fail("Promise not correctly calling failure handler when exception or rejection occurs");
-                testComplete();
-              }
-            },
-            new PromiseAction<Exception>() {
-              @Override
-              public void call(Exception e) {
-                System.out.println(e);
-                assertTrue("Exception is not StringIndexOutOfBoundsException", e instanceof StringIndexOutOfBoundsException);
-                testComplete();
-              }
-            }
-        );
+        },
+        new PromiseAction<Exception>() {
+          @Override
+          public void call(Exception e) {
+            System.out.println(e);
+            assertTrue("Exception is not StringIndexOutOfBoundsException", e instanceof StringIndexOutOfBoundsException);
+            testComplete();
+          }
+        }
+      );
   }
 
   /* Exception with fail() handler */
   @Test
   public void testException2() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseFunction<String, Character>() {
+      .then(new PromiseFunction<String, Character>() {
+        @Override
+        public Character call(String result) {
+          return result.charAt(20); // Exception
+        }
+      }).fail(
+        new PromiseAction<Exception>() {
           @Override
-          public Character call(String result) {
-            return result.charAt(20); // Exception
+          public void call(Exception e) {
+            assertTrue(e instanceof StringIndexOutOfBoundsException);
+            testComplete();
           }
-        }).fail(
-            new PromiseAction<Exception>() {
-              @Override
-              public void call(Exception e) {
-                assertTrue(e instanceof StringIndexOutOfBoundsException);
-                testComplete();
-              }
-            }
-        );
+        }
+      );
   }
 
   /* Exception with fail() handler */
   @Test
   public void testException3() throws Exception {
     makePromise("Hello World")
-        .then(
-            new PromiseFunction<String, Character>() {
-              @Override
-              public Character call(String result) {
-                return result.charAt(20); // Exception
-              }
-            },
-            new PromiseAction<Exception>() {
-              @Override
-              public void call(Exception e) {
-                fail("This rejection handler should not be called!");
-                testComplete();
-              }
-            }
-        ).fail(
-            new PromiseAction<Exception>() {
-              @Override
-              public void call(Exception e) {
-                assertTrue(e instanceof StringIndexOutOfBoundsException);
-                testComplete();
-              }
-            }
-        );
+      .then(
+        new PromiseFunction<String, Character>() {
+          @Override
+          public Character call(String result) {
+            return result.charAt(20); // Exception
+          }
+        },
+        new PromiseAction<Exception>() {
+          @Override
+          public void call(Exception e) {
+            fail("This rejection handler should not be called!");
+            testComplete();
+          }
+        }
+      ).fail(
+        new PromiseAction<Exception>() {
+          @Override
+          public void call(Exception e) {
+            assertTrue(e instanceof StringIndexOutOfBoundsException);
+            testComplete();
+          }
+        }
+      );
   }
 
   /* Exception with handler */
@@ -223,53 +223,53 @@ public class PromiseTestsStrict extends PromiseTestBase {
     final AtomicBoolean flag = new AtomicBoolean(false);
 
     makePromise("Hello World")
-        .then(new PromiseFunction<String, Character>() {
+      .then(new PromiseFunction<String, Character>() {
+        @Override
+        public Character call(String result) {
+          return result.charAt(20); // Exception
+        }
+      }).then(
+        new PromiseFunction<Character, String>() {
           @Override
-          public Character call(String result) {
-            return result.charAt(20); // Exception
-          }
-        }).then(
-            new PromiseFunction<Character, String>() {
-              @Override
-              public String call(Character value) {
-                fail("Promise not correctly calling failure handler when exception or rejection occurs");
-                testComplete();
-                return "The Char is : " + value;
-              }
-            },
-            new PromiseFunction<Exception, String>() {
-              @Override
-              public String call(Exception value) {
-                flag.set(true);
-                return null;
-              }
-            }
-        ).then(new PromiseAction<String>() {
-          @Override
-          public void call(String value) {
-            assertNull(value);
-            assertTrue("FailureHandler was not called", flag.get());
+          public String call(Character value) {
+            fail("Promise not correctly calling failure handler when exception or rejection occurs");
             testComplete();
+            return "The Char is : " + value;
           }
-        });
+        },
+        new PromiseFunction<Exception, String>() {
+          @Override
+          public String call(Exception value) {
+            flag.set(true);
+            return null;
+          }
+        }
+      ).then(new PromiseAction<String>() {
+        @Override
+        public void call(String value) {
+          assertNull(value);
+          assertTrue("FailureHandler was not called", flag.get());
+          testComplete();
+        }
+      });
   }
 
   @Test
   public void testException5() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseFunction<String, Character>() {
-          @Override
-          public Character call(String result) {
-            return result.charAt(20); // Exception
-          }
-        })
-        .then(new PromiseAction<Character>() {
-          @Override
-          public void call(Character value) {
-            fail("Promise should not execute this due to exception");
-            testComplete();
-          }
-        });
+      .then(new PromiseFunction<String, Character>() {
+        @Override
+        public Character call(String result) {
+          return result.charAt(20); // Exception
+        }
+      })
+      .then(new PromiseAction<Character>() {
+        @Override
+        public void call(Character value) {
+          fail("Promise should not execute this due to exception");
+          testComplete();
+        }
+      });
 
     endLater();
   }
@@ -278,62 +278,62 @@ public class PromiseTestsStrict extends PromiseTestBase {
   @Test
   public void testException7() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseFunction<String, Character>() {
-          @Override
-          public Character call(String result) {
-            return result.charAt(20); // Exception
-          }
-        })
-        .then(new PromiseAction<Character>() {
-          @Override
-          public void call(Character value) {
-            fail("Promise should not execute this due to exception");
-            testComplete();
-          }
-        })
-        .fail(new PromiseAction<Exception>() {
-          @Override
-          public void call(Exception e) {
-            assertTrue(e instanceof StringIndexOutOfBoundsException);
-            testComplete();
-          }
-        });
+      .then(new PromiseFunction<String, Character>() {
+        @Override
+        public Character call(String result) {
+          return result.charAt(20); // Exception
+        }
+      })
+      .then(new PromiseAction<Character>() {
+        @Override
+        public void call(Character value) {
+          fail("Promise should not execute this due to exception");
+          testComplete();
+        }
+      })
+      .fail(new PromiseAction<Exception>() {
+        @Override
+        public void call(Exception e) {
+          assertTrue(e instanceof StringIndexOutOfBoundsException);
+          testComplete();
+        }
+      });
   }
 
   /* Fin with basic */
   @Test
   public void testFinally1() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseFunction<String, Character>() {
-          @Override
-          public Character call(String result) {
-            return result.charAt(0);
-          }
-        })
-        .fin(new FinallyAction() {
-          @Override
-          public void call() {
-            testComplete();
-          }
-        });
+      .then(new PromiseFunction<String, Character>() {
+        @Override
+        public Character call(String result) {
+          return result.charAt(0);
+        }
+      })
+      .fin(new FinallyAction() {
+        @Override
+        public void call() {
+          testComplete();
+        }
+      });
   }
 
   /* Fin with Exception */
   @Test
   public void testFinally2() throws Exception {
     makePromise("Hello World")
-        .then(new PromiseFunction<String, Character>() {
-          @Override
-          public Character call(String result) {
-            return result.charAt(20);
-          }
-        })
-        .fin(new FinallyAction() {
-          @Override
-          public void call() {
-            testComplete();
-          }
-        });
+      .then(new PromiseFunction<String, Character>() {
+        @Override
+        public Character call(String result) {
+          return result.charAt(20);
+        }
+      })
+      .fin(new FinallyAction() {
+        @Override
+        public void call() {
+          testComplete();
+        }
+      });
   }
 
   /* then() handler after fin() */
@@ -342,29 +342,29 @@ public class PromiseTestsStrict extends PromiseTestBase {
     final AtomicBoolean flag = new AtomicBoolean(false);
 
     makePromise("Hello World")
-        .then(new PromiseFunction<String, Character>() {
-          @Override
-          public Character call(String result) {
-            return result.charAt(0);
-          }
-        })
-        .fin(new FinallyAction() {
-          @Override
-          public void call() {
-            flag.set(true);
-          }
-        })
-        .then(new PromiseAction<Character>() {
-          @Override
-          public void call(Character value) {
-            // value from promise must pass through
-            // finally handler must fire
-            // finally return value must be ignored
-            assertEquals("Wrong value passed after calling finally", value, new Character('H'));
-            assertTrue(flag.get());
-            testComplete();
-          }
-        });
+      .then(new PromiseFunction<String, Character>() {
+        @Override
+        public Character call(String result) {
+          return result.charAt(0);
+        }
+      })
+      .fin(new FinallyAction() {
+        @Override
+        public void call() {
+          flag.set(true);
+        }
+      })
+      .then(new PromiseAction<Character>() {
+        @Override
+        public void call(Character value) {
+          // value from promise must pass through
+          // finally handler must fire
+          // finally return value must be ignored
+          assertEquals("Wrong value passed after calling finally", value, new Character('H'));
+          assertTrue(flag.get());
+          testComplete();
+        }
+      });
   }
 
   /* then() handler after fin() */
@@ -373,39 +373,39 @@ public class PromiseTestsStrict extends PromiseTestBase {
     final AtomicBoolean flag = new AtomicBoolean(false);
 
     makePromise("Hello World")
-        .then(new PromiseFunction<String, Character>() {
-          @Override
-          public Character call(String result) {
-            return result.charAt(0);
-          }
-        })
-        .fin(new FinallyFunction<Void>() {
-          @Override
-          public Promise<Void> call() {
-            final Promise<Void> promise = Promise.defer();
-            vertx.runOnLoop(new SimpleHandler() {
-              @Override
-              protected void handle() {
-                flag.set(true);
-                promise.fulfill(null);
-              }
-            });
+      .then(new PromiseFunction<String, Character>() {
+        @Override
+        public Character call(String result) {
+          return result.charAt(0);
+        }
+      })
+      .fin(new FinallyFunction<Void>() {
+        @Override
+        public Promise<Void> call() {
+          final Promise<Void> promise = Promise.defer();
+          vertx.runOnContext(new Handler<Void>() {
+            @Override
+            public void handle(Void event) {
+              flag.set(true);
+              promise.fulfill(null);
+            }
+          });
 
-            return promise;
-          }
-        })
-        .then(new PromiseAction<Character>() {
-          @Override
-          public void call(Character value) {
-            // value from promise must pass through
-            // finally handler must fire
-            // finally return value must be ignored
-            // then must fire only after finally has fulfilled promise
-            assertEquals("Wrong value passed after calling finally", value, new Character('H'));
-            assertTrue(flag.get());
-            testComplete();
-          }
-        });
+          return promise;
+        }
+      })
+      .then(new PromiseAction<Character>() {
+        @Override
+        public void call(Character value) {
+          // value from promise must pass through
+          // finally handler must fire
+          // finally return value must be ignored
+          // then must fire only after finally has fulfilled promise
+          assertEquals("Wrong value passed after calling finally", value, new Character('H'));
+          assertTrue(flag.get());
+          testComplete();
+        }
+      });
   }
 
   /* then() rejection after fin() */
@@ -414,26 +414,26 @@ public class PromiseTestsStrict extends PromiseTestBase {
     final AtomicBoolean flag = new AtomicBoolean(false);
 
     makePromise("Hello World")
-        .then(new PromiseFunction<String, Character>() {
-          @Override
-          public Character call(String result) {
-            return result.charAt(20);
-          }
-        })
-        .fin(new FinallyAction() {
-          @Override
-          public void call() {
-            flag.set(true);
-          }
-        })
-        .fail(new PromiseAction<Exception>() {
-          @Override
-          public void call(Exception reason) {
-            assertTrue(reason instanceof StringIndexOutOfBoundsException);
-            assertTrue(flag.get());
-            testComplete();
-          }
-        });
+      .then(new PromiseFunction<String, Character>() {
+        @Override
+        public Character call(String result) {
+          return result.charAt(20);
+        }
+      })
+      .fin(new FinallyAction() {
+        @Override
+        public void call() {
+          flag.set(true);
+        }
+      })
+      .fail(new PromiseAction<Exception>() {
+        @Override
+        public void call(Exception reason) {
+          assertTrue(reason instanceof StringIndexOutOfBoundsException);
+          assertTrue(flag.get());
+          testComplete();
+        }
+      });
   }
 
   @Test

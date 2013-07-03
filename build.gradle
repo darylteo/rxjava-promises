@@ -33,7 +33,11 @@ subprojects {
   .collect { project(it) }
   .each { project ->
     project.with {
-      apply plugin: VertxPlugin
+      apply plugin: VertxProjectPlugin
+      
+      vertx {
+        version = vertxVersion
+      }
     }
   }
 
