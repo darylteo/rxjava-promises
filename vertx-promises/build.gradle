@@ -2,12 +2,8 @@ dependencies {
   compile project(':rxjava-promises')
 }
 
-/*
-If you're uploading stuff to Maven, Gradle needs to generate a POM.
-Please edit the details below.
- */
-uploadArchives {
-  repositories.mavenDeployer.pom.project {
+maven {
+  project {
     name 'RxJava Promises - Vertx Module'
     description 'Promises module for Vert.x - JS Shim'
     inceptionYear '2013'

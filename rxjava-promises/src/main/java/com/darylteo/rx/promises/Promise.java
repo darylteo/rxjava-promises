@@ -8,7 +8,7 @@ import java.util.Map;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
-import rx.util.AtomicObservableSubscription;
+import rx.operators.AtomicObservableSubscription;
 import rx.util.functions.Func1;
 import rx.util.functions.Functions;
 
@@ -84,32 +84,32 @@ public class Promise<T> extends Observable<T> implements Observer<T> {
     final Map<Subscription, Observer<T>> observers = new LinkedHashMap<Subscription, Observer<T>>();
 
     final Promise<T> promise = new Promise<>(
-        new Func1<Observer<T>, Subscription>() {
-          @Override
-          public Subscription call(Observer<T> observer) {
-            final AtomicObservableSubscription subscription = new AtomicObservableSubscription();
+      new Func1<Observer<T>, Subscription>() {
+        @Override
+        public Subscription call(Observer<T> observer) {
+          final rx.operators.AtomicObservableSubscription subscription = new AtomicObservableSubscription();
 
-            subscription.wrap(new Subscription() {
-              @Override
-              public void unsubscribe() {
-                // on unsubscribe remove it from the map of outbound observers
-                // to notify
-                observers.remove(subscription);
-              }
-            });
+          subscription.wrap(new Subscription() {
+            @Override
+            public void unsubscribe() {
+              // on unsubscribe remove it from the map of outbound observers
+              // to notify
+              observers.remove(subscription);
+            }
+          });
 
-            observers.put(subscription, observer);
-            return subscription;
-          }
-        },
-        observers
-        );
+          observers.put(subscription, observer);
+          return subscription;
+        }
+      },
+      observers
+      );
 
     return promise;
   }
 
   protected Promise(Func1<Observer<T>, Subscription> onSubscribe,
-      Map<Subscription, Observer<T>> observers) {
+    Map<Subscription, Observer<T>> observers) {
     super(onSubscribe);
     this.observers = observers;
   }
@@ -153,37 +153,37 @@ public class Promise<T> extends Observable<T> implements Observer<T> {
 
   // then(onFulfilled, onRejected)
   public <O> Promise<O> then(PromiseFunction<T, O> onFulfilled,
-      PromiseFunction<Exception, O> onRejected) {
+    PromiseFunction<Exception, O> onRejected) {
     return this._then(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(PromiseFunction<T, O> onFulfilled,
-      RepromiseFunction<Exception, O> onRejected) {
+    RepromiseFunction<Exception, O> onRejected) {
     return this._then(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(PromiseFunction<T, O> onFulfilled,
-      PromiseAction<Exception> onRejected) {
+    PromiseAction<Exception> onRejected) {
     return this._then(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(RepromiseFunction<T, O> onFulfilled,
-      PromiseFunction<Exception, O> onRejected) {
+    PromiseFunction<Exception, O> onRejected) {
     return this._then(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(RepromiseFunction<T, O> onFulfilled,
-      RepromiseFunction<Exception, O> onRejected) {
+    RepromiseFunction<Exception, O> onRejected) {
     return this._then(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(RepromiseFunction<T, O> onFulfilled,
-      PromiseAction<Exception> onRejected) {
+    PromiseAction<Exception> onRejected) {
     return this._then(onFulfilled, onRejected, null);
   }
 
   public Promise<Void> then(PromiseAction<T> onFulfilled,
-      PromiseAction<Exception> onRejected) {
+    PromiseAction<Exception> onRejected) {
     return this._then(onFulfilled, onRejected, null);
   }
 
@@ -212,9 +212,9 @@ public class Promise<T> extends Observable<T> implements Observer<T> {
   /* ================== */
   /* Private Functions */
   private <O> Promise<O> _then(
-      final Object onFulfilled,
-      final Object onRejected,
-      final Object onFinally)
+    final Object onFulfilled,
+    final Object onRejected,
+    final Object onFinally)
   {
     // This is the next promise in the chain.
     // The handlers you see below will resolve their values and forward them to
@@ -250,17 +250,17 @@ public class Promise<T> extends Observable<T> implements Observer<T> {
               // fulfillment of the next promise until the returned promise is
               // fulfilled
               ((Promise<Void>) result).then(
-                  new PromiseAction<Void>() {
-                    @Override
-                    public void call(Void v) {
-                      deferred.fulfill((O) that.value);
-                    }
-                  }, new PromiseAction<Exception>() {
-                    @Override
-                    public void call(Exception e) {
-                      deferred.reject(e);
-                    }
-                  });
+                new PromiseAction<Void>() {
+                  @Override
+                  public void call(Void v) {
+                    deferred.fulfill((O) that.value);
+                  }
+                }, new PromiseAction<Exception>() {
+                  @Override
+                  public void call(Exception e) {
+                    deferred.reject(e);
+                  }
+                });
             } else {
               // nothing was returned by the finally block. We can go ahead and
               // forward the value/reason held by this promise on to the next
