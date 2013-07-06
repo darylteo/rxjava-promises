@@ -1,7 +1,6 @@
-dependencies {
-  compile project(':rxjava-promises')
-  
+dependencies { 
   provided 'org.mozilla:rhino:1.7R4'
+  provided project(':vertx-promises')
 }
 
 vertx {

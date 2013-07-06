@@ -87,6 +87,15 @@ function test_scope() {
     })
 }
 
+function test_handler() {
+	var p = promises.defer();
+	vertx.setTimer(1000, p);
+	
+	p.then(function(){
+		vassert.testComplete();
+	});
+}
+
 function makePromise(){
   var promise = promises.defer();
 
