@@ -13,12 +13,11 @@ buildscript {
   }
 }
 
-group = 'com.darylteo'
-version = '1.1.0-ALPHA1'
-
 subprojects {
   apply plugin: MavenPlugin
 
+  dependencies { testCompile "junit:junit:$junitVersion" }
+  
   maven {
     release = project.hasProperty('release') ? project.release : false
 
@@ -38,14 +37,11 @@ subprojects {
 .each { project ->
   project.with {
     apply plugin: VertxProjectPlugin
+    apply plugin: VertxPublishPlugin
 
     vertx {
       version = vertxVersion
-      config { test = "test" }
+      config { }
     }
   }
-}
-
-subprojects {
-  dependencies { compile "junit:junit:$junitVersion" }
 }
