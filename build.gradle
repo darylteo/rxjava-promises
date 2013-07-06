@@ -1,5 +1,5 @@
 import com.darylteo.gradle.plugins.*
-import com.darylteo.gradle.vertx.*
+import com.darylteo.gradle.plugins.vertx.*
 
 buildscript {
   repositories {
@@ -13,12 +13,13 @@ buildscript {
   }
 }
 
+group = 'com.darylteo'
+version = '1.1.0-ALPHA1'
+
 subprojects {
   apply plugin: MavenPlugin
 
   maven {
-    group = 'com.darylteo'
-    version = '1.1.0-ALPHA1'
     release = project.hasProperty('release') ? project.release : false
 
     username = sonatypeUsername
@@ -29,20 +30,22 @@ subprojects {
   }
 }
 
-[':vertx-promises', ':vertx-promises-js']
-  .collect { project(it) }
-  .each { project ->
-    project.with {
-      apply plugin: VertxProjectPlugin
-      
-      vertx {
-        version = vertxVersion
-      }
+[
+  ':vertx-promises',
+  ':vertx-promises-js'
+]
+.collect { project(it) }
+.each { project ->
+  project.with {
+    apply plugin: VertxProjectPlugin
+
+    vertx {
+      version = vertxVersion
+      config { test = "test" }
     }
   }
+}
 
 subprojects {
-  dependencies {
-    compile "junit:junit:$junitVersion"
-  }
+  dependencies { compile "junit:junit:$junitVersion" }
 }

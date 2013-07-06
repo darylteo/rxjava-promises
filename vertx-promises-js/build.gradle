@@ -1,8 +1,12 @@
 dependencies {
-  compile project(':vertx-promises')
-  // modules vertxModule('io.vertx~lang-rhino~1.0.0-SNAPSHOT')
-
   testCompile "com.netflix.rxjava:rxjava-core:${rxjavaVersion}"
+}
+
+println "Configuring Vertx"
+vertx {
+  config {
+    includes = ['io.vertx~lang-rhino~1.0.0-SNAPSHOT']
+  }
 }
 
 maven {
