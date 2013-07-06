@@ -62,7 +62,7 @@ import com.darylteo.rx.promises.functions.RepromiseFunction;
  * @param T
  *          - the data type of the result contained by this Promise.
  */
-public final class Promise<T> extends AbstractPromise<T> {
+public class Promise<T> extends AbstractPromise<T> {
   public static <T> Promise<T> defer() {
     return new Promise<T>();
   }
