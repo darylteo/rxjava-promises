@@ -1,5 +1,7 @@
-load("vertx.js");
-load("vertx_tests.js");
+var container = require("vertx/container")
+var vertx = require("vertx");
+var vertxTests = require("vertx_tests");
+var vassert = require("vertx_assert");
 
 var promises = require('promises.js')
 
@@ -88,7 +90,7 @@ function test_scope() {
 function makePromise(){
   var promise = promises.defer();
 
-  vertx.runOnLoop(function(){
+  vertx.runOnContext(function(){
     promise.fulfill('Hello World');
   });
 
@@ -98,11 +100,11 @@ function makePromise(){
 function makeFailPromise(){
   var promise = promises.defer();
 
-  vertx.runOnLoop(function(){
+  vertx.runOnContext(function(){
     promise.reject('Connection timed out!');
   });
 
   return promise;
 }
 
-initTests(this);
+vertxTests.startTests(this);

@@ -1,11 +1,12 @@
 dependencies {
-  testCompile "com.netflix.rxjava:rxjava-core:${rxjavaVersion}"
+  compile project(':rxjava-promises')
+  
+  provided 'org.mozilla:rhino:1.7R4'
 }
 
-println "Configuring Vertx"
 vertx {
   config {
-    includes = ['io.vertx~lang-rhino~1.0.0-SNAPSHOT']
+    
   }
 }
 
@@ -24,9 +25,7 @@ maven {
       }
     }
 
-    scm {
-      url 'http://github.com/darylteo/rxjava-promises'
-    }
+    scm { url 'http://github.com/darylteo/rxjava-promises' }
 
     licenses {
       license {
@@ -36,8 +35,6 @@ maven {
       }
     }
 
-    properties {
-      setProperty('project.build.sourceEncoding', 'UTF8')
-    }
+    properties { setProperty('project.build.sourceEncoding', 'UTF8') }
   }
 }
