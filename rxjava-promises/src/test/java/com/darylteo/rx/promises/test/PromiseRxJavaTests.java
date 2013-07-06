@@ -20,13 +20,13 @@ public class PromiseRxJavaTests {
     final Result<String> result = new Result<>();
 
     makePromise("Hello World")
-        .subscribe(new Action1<String>() {
-          @Override
-          public void call(String value) {
-            result.value = value;
-            latch.countDown();
-          }
-        });
+      .subscribe(new Action1<String>() {
+        @Override
+        public void call(String value) {
+          result.value = value;
+          latch.countDown();
+        }
+      });
 
     latch.await();
     assertEquals("Hello World", result.value);
@@ -38,19 +38,19 @@ public class PromiseRxJavaTests {
     final Result<String> result = new Result<>();
 
     makePromise("Hello World")
-        .map(new Func1<String, String>() {
-          @Override
-          public String call(String value) {
-            return value.toUpperCase();
-          }
-        })
-        .subscribe(new Action1<String>() {
-          @Override
-          public void call(String value) {
-            result.value = value;
-            latch.countDown();
-          }
-        });
+      .map(new Func1<String, String>() {
+        @Override
+        public String call(String value) {
+          return value.toUpperCase();
+        }
+      })
+      .subscribe(new Action1<String>() {
+        @Override
+        public void call(String value) {
+          result.value = value;
+          latch.countDown();
+        }
+      });
 
     latch.await();
     assertEquals("HELLO WORLD", result.value);
