@@ -41,7 +41,9 @@ subprojects {
 
     vertx {
       version = vertxVersion
-      config { }
+      config { 
+        
+      }
     }
   }
 }

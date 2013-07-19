@@ -1,13 +1,16 @@
 dependencies { 
   provided 'org.mozilla:rhino:1.7R4'
-  provided project(':vertx-promises')
 }
+
+def promiseProject = project(':vertx-promises')
 
 vertx {
   config {
-    
+    includes = "${promiseProject.moduleName}"
   }
 }
+
+pullIncludes.dependsOn promiseProject.tasks.install
 
 maven {
   project {
