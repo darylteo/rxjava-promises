@@ -5,7 +5,7 @@ dependencies {
 maven {
   project {
     name 'RxJava Promises - Vertx Module'
-    description 'Promises module for Vert.x - JS Shim'
+    description 'Promises module for Vert.x - Java'
     inceptionYear '2013'
     url 'http://github.com/darylteo/rxjava-promises'
 

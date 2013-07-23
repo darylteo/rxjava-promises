@@ -4,9 +4,11 @@ var vertxTests = require("vertx_tests");
 var vassert = require("vertx_assert");
 
 var promises = require('promises.js')
+var logger = container.logger;
 
-// // The test methods must begin with "test"
+logger.info(function(){});
 
+// The test methods must begin with "test"
 function test_require() {
   vassert.assertNotNull(promises);
   vassert.testComplete();

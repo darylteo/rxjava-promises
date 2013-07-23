@@ -3,21 +3,21 @@ import com.darylteo.gradle.plugins.vertx.*
 
 buildscript {
   repositories {
-    mavenLocal() // testing purposes only
     mavenCentral()
   }
 
   dependencies {
-    classpath 'com.darylteo:maven-plugin:1.1.0-ALPHA1-SNAPSHOT'
-    classpath 'com.darylteo:vertx-gradle-plugin:1.1.0-ALPHA1-SNAPSHOT'
+    classpath 'com.darylteo:maven-plugin:1.1.0'
+    classpath 'com.darylteo:vertx-gradle-plugin:1.1.0-ALPHA1'
   }
 }
 
 subprojects {
+  apply plugin: 'java'
   apply plugin: MavenPlugin
 
   dependencies { testCompile "junit:junit:$junitVersion" }
-  
+
   maven {
     release = project.hasProperty('release') ? project.release : false
 
@@ -30,8 +30,7 @@ subprojects {
 }
 
 [
-  ':vertx-promises',
-  ':vertx-promises-js'
+  ':vertx-promises'
 ]
 .collect { project(it) }
 .each { project ->
@@ -41,8 +40,8 @@ subprojects {
 
     vertx {
       version = vertxVersion
-      config { 
-        
+      
+      config {
       }
     }
   }
