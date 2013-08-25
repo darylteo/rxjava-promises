@@ -5,14 +5,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import com.darylteo.rx.promises.functions.PromiseAction;
-
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
-import rx.operators.AtomicObservableSubscription;
+import rx.operators.SafeObservableSubscription;
 import rx.util.functions.Func1;
 import rx.util.functions.Functions;
+
+import com.darylteo.rx.promises.functions.PromiseAction;
 
 public abstract class AbstractPromise<T> extends Observable<T> implements Observer<T> {
   public static enum STATE {
@@ -42,9 +42,9 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
     return this.value;
   }
 
-  private Exception reason;
+  private Throwable reason;
 
-  public Exception getReason() {
+  public Throwable getReason() {
     return this.reason;
   }
 
@@ -53,7 +53,7 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
     super(new Func1<Observer<T>, Subscription>() {
       @Override
       public Subscription call(Observer<T> observer) {
-        final rx.operators.AtomicObservableSubscription subscription = new AtomicObservableSubscription();
+        final rx.operators.SafeObservableSubscription subscription = new SafeObservableSubscription();
 
         subscription.wrap(new Subscription() {
           @Override
@@ -92,7 +92,7 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
       }
 
       @Override
-      public void onError(Exception reason) {
+      public void onError(Throwable reason) {
         that.reason = reason;
         this.evaluate();
       }
@@ -163,7 +163,7 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
             }
             return;
           }
-        } catch (Exception e) {
+        } catch (Throwable e) {
           // On any exception in the handlers above, we should throw the
           // exception to the next promise
 
@@ -215,7 +215,7 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
     }
   }
 
-  public void reject(Exception reason) {
+  public void reject(Throwable reason) {
     if (this.state != STATE.PENDING) {
       throw new IllegalStateException();
     }
@@ -244,7 +244,7 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
   }
 
   @Override
-  public void onError(Exception e) {
+  public void onError(Throwable e) {
     this.reject(e);
   }
 

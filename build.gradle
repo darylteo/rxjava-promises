@@ -2,13 +2,14 @@ import com.darylteo.gradle.plugins.*
 import com.darylteo.gradle.plugins.vertx.*
 
 buildscript {
-  repositories {
+  repositories { 
     mavenCentral()
+    mavenLocal() 
   }
 
   dependencies {
-    classpath 'com.darylteo:maven-plugin:1.1.0'
-    classpath 'com.darylteo:vertx-gradle-plugin:1.1.0-ALPHA1'
+    classpath "com.darylteo:maven-plugin:${mavenPluginVersion}"
+    classpath "com.darylteo:vertx-gradle-plugin:${vertxPluginVersion}"
   }
 }
 
@@ -29,9 +30,7 @@ subprojects {
   }
 }
 
-[
-  ':vertx-promises'
-]
+[':vertx-promises']
 .collect { project(it) }
 .each { project ->
   project.with {
@@ -40,7 +39,7 @@ subprojects {
 
     vertx {
       version = vertxVersion
-      
+
       config {
       }
     }

@@ -486,12 +486,14 @@ public class PromiseTestsStrict {
       .fail(new PromiseAction<Exception>() {
         @Override
         public void call(Exception reason) {
+          System.out.println(reason);
           result.value = reason;
           latch.countDown();
         }
       });
 
     latch.await(2l, TimeUnit.SECONDS);
+    System.out.println(result.value instanceof StringIndexOutOfBoundsException);
     assertEquals("Exception was not StringIndexOutOfBoundsException", StringIndexOutOfBoundsException.class, result.value.getClass());
     assertTrue(flag.get());
   }
