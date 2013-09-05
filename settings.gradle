@@ -1,1 +1,1 @@
-include 'rxjava-promises', 'vertx-promises'
+include 'rxjava-promises', 'vertx-promises', 'vertx-promises-groovy'

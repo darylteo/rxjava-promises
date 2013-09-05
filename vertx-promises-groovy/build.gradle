@@ -1,9 +1,11 @@
+apply plugin: 'groovy'
+
 dependencies { vertxlibs project(':rxjava-promises') }
 
 maven {
   project {
-    name 'RxJava Promises - Vertx Module'
-    description 'Promises module for Vert.x - Java'
+    name 'RxJava Promises - Vertx Module - Groovy'
+    description 'Promises module for Vert.x - Groovy'
     inceptionYear '2013'
     url 'http://github.com/darylteo/rxjava-promises'
 

@@ -2,9 +2,9 @@ import com.darylteo.gradle.plugins.*
 import com.darylteo.gradle.plugins.vertx.*
 
 buildscript {
-  repositories { 
+  repositories {
     mavenCentral()
-    mavenLocal() 
+    mavenLocal()
   }
 
   dependencies {
@@ -30,7 +30,10 @@ subprojects {
   }
 }
 
-[':vertx-promises']
+[
+  ':vertx-promises',
+  ':vertx-promises-groovy'
+]
 .collect { project(it) }
 .each { project ->
   project.with {

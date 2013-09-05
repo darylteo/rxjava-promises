@@ -1,6 +1,6 @@
-package com.darylteo.vertx.promises;
+package com.darylteo.vertx.promises.groovy
 
-import org.vertx.java.core.Handler;
+import org.vertx.java.core.Handler
 
 public class Promise<T> extends com.darylteo.rx.promises.Promise<T> implements Handler<T> {
   public static <T> Promise<T> defer() {
