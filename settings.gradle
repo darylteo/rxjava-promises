@@ -1,1 +1,1 @@
-include 'core:java'
+include ':rxjava-promises:core',':rxjava-promises:java'

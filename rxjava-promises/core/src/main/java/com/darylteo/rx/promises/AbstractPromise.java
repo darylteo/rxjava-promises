@@ -13,11 +13,6 @@ import rx.util.functions.Action1;
 import rx.util.functions.Func0;
 import rx.util.functions.Func1;
 import rx.util.functions.Function;
-import rx.util.functions.Functions;
-
-import com.darylteo.rx.promises.functions.FinallyAction;
-import com.darylteo.rx.promises.functions.FinallyFunction;
-import com.darylteo.rx.promises.functions.PromiseAction;
 
 public abstract class AbstractPromise<T> extends Observable<T> implements Observer<T> {
   public static enum STATE {
@@ -137,15 +132,14 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
           // fulfillment of the next promise until the returned promise is
           // fulfilled
           ((AbstractPromise<? super Object>) result)._then(
-            new PromiseAction<Object>() {
+            new Action1<Object>() {
               @Override
               public void call(Object v) {
-                System.out.println("YAY");
                 deferred.fulfill((O) that.value);
               }
-            }, new PromiseAction<Exception>() {
+            }, new Action1<Throwable>() {
               @Override
-              public void call(Exception e) {
+              public void call(Throwable e) {
                 deferred.reject(e);
               }
             }, null);
@@ -184,11 +178,11 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
       }
 
       private AbstractPromise<?> callFinally() {
-        if (onFinally instanceof FinallyFunction) {
-          return (AbstractPromise<?>) ((FinallyFunction) onFinally).call();
+        if (onFinally instanceof Func0) {
+          return (AbstractPromise<?>) ((Func0<?>) onFinally).call();
         }
 
-        ((FinallyAction) onFinally).call();
+        ((Action0) onFinally).call();
         return null;
       }
 
@@ -282,7 +276,7 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
   /* Observable Methods */
   @Override
   public void onCompleted() {
-    // no op
+    this.fulfill(this.value);
   }
 
   @Override
@@ -292,11 +286,7 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
 
   @Override
   public void onNext(T value) {
-    // Grab only the first value
-    // Ignore others if they come in
-    if (this.state == STATE.PENDING) {
-      this.fulfill(value);
-    }
+    this.value = value;
   }
 
   /* Private Methods */
