@@ -9,7 +9,7 @@ import org.junit.Test;
 import rx.util.functions.Action1;
 import rx.util.functions.Func1;
 
-import com.darylteo.rx.promises.Promise;
+import com.darylteo.rx.java.promises.Promise;
 
 public class PromiseRxJavaTests {
 

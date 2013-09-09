@@ -8,7 +8,8 @@ subprojects {
   dependencies { testCompile 'junit:junit:4.11' }
 }
 
+project(':rxjava-promises:groovy') { apply plugin: 'groovy' }
+
 configure(subprojects - project(':rxjava-promises:core')) {
-  println it
   dependencies { compile project(':rxjava-promises:core') }
 }

@@ -1,1 +1,10 @@
-include ':rxjava-promises:core',':rxjava-promises:java'
+[
+   'core',
+   'java',
+   'groovy'
+]
+.collect {
+   ":rxjava-promises:$it"
+}.each {
+   include it
+}

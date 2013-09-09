@@ -13,14 +13,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
-import com.darylteo.rx.promises.Promise;
-import com.darylteo.rx.promises.functions.FinallyAction;
-import com.darylteo.rx.promises.functions.FinallyFunction;
-import com.darylteo.rx.promises.functions.PromiseAction;
-import com.darylteo.rx.promises.functions.PromiseFunction;
-import com.darylteo.rx.promises.functions.RepromiseFunction;
+import com.darylteo.rx.java.promises.Promise;
+import com.darylteo.rx.java.promises.functions.FinallyAction;
+import com.darylteo.rx.java.promises.functions.FinallyFunction;
+import com.darylteo.rx.java.promises.functions.PromiseAction;
+import com.darylteo.rx.java.promises.functions.PromiseFunction;
+import com.darylteo.rx.java.promises.functions.RepromiseFunction;
 
-public class PromiseTestsStrict {
+public class PromiseTestsJava {
 
   @Test
   public void testDefer() throws Exception {

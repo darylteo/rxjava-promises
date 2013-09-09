@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.darylteo.rx.promises.AbstractPromise;
+
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
@@ -31,6 +33,18 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
 
   public STATE getState() {
     return this.state;
+  }
+
+  public boolean isPending() {
+    return this.state == STATE.PENDING;
+  }
+
+  public boolean isFulfilled() {
+    return this.state == STATE.FULFILLED;
+  }
+
+  public boolean isRejected() {
+    return this.state == STATE.REJECTED;
   }
 
   public T getValue() {
@@ -235,8 +249,8 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
 
   /* Result Methods */
   public void fulfill(T value) {
-    if (this.state != STATE.PENDING) {
-      throw new IllegalStateException();
+    if (!this.isPending()) {
+      return;
     }
 
     this.state = STATE.FULFILLED;
@@ -251,8 +265,8 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
   }
 
   public void reject(Throwable reason) {
-    if (this.state != STATE.PENDING) {
-      throw new IllegalStateException();
+    if (!this.isPending()) {
+      return;
     }
 
     this.state = STATE.REJECTED;
@@ -260,6 +274,12 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
 
     // A copy of the observers is taken first, in case more observers are added after.
     List<Observer<? super T>> observerList = new ArrayList<>(this.observers.values());
+
+    if (observerList.isEmpty()) {
+      System.err.println("Warning: Promise was rejected but no rejection function was provided");
+      reason.printStackTrace();
+    }
+
     for (Observer<? super T> obs : observerList) {
       obs.onError(this.reason);
     }

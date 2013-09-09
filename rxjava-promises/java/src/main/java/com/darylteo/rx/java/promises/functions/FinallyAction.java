@@ -1,4 +1,4 @@
-package com.darylteo.rx.promises.functions;
+package com.darylteo.rx.java.promises.functions;
 
 import rx.util.functions.Action0;
 

@@ -1,6 +1,5 @@
 dependencies {
   compile "com.netflix.rxjava:rxjava-core:${rxjavaVersion}"
-  compile "com.netflix.rxjava:rxjava-groovy:${rxjavaVersion}"
 }
 
 maven {
