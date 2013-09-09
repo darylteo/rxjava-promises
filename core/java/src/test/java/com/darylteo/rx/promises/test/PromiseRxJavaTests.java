@@ -6,7 +6,6 @@ import java.util.concurrent.CountDownLatch;
 
 import org.junit.Test;
 
-import rx.Observable;
 import rx.util.functions.Action1;
 import rx.util.functions.Func1;
 
@@ -54,27 +53,6 @@ public class PromiseRxJavaTests {
 
     latch.await();
     assertEquals("HELLO WORLD", result.value);
-  }
-
-  @Test
-  public void testRxToPromise() throws InterruptedException {
-    final CountDownLatch latch = new CountDownLatch(1);
-    final Result<String> result = new Result<>();
-
-    Observable<String> obs = Observable.from("Hello", "World");
-    Promise<String> p = Promise.defer();
-
-    p.then(new Action1<String>() {
-      @Override
-      public void call(String value) {
-        result.value = value;
-        latch.countDown();
-      }
-    });
-
-    obs.subscribe(p);
-    latch.await();
-    assertEquals("Hello", result.value);
   }
 
   public Promise<String> makePromise(final String value) {

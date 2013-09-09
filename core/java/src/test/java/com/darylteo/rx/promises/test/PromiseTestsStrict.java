@@ -415,7 +415,7 @@ public class PromiseTestsStrict {
     assertTrue(flag.get());
   }
 
-  /* then() handler after fin() */
+  /* then() handler after fin() with promise(void) */
   @Test
   public void testFinally4() throws Exception {
     final CountDownLatch latch = new CountDownLatch(1);
@@ -437,8 +437,8 @@ public class PromiseTestsStrict {
           makePromise("Foo Bar").then(new PromiseAction<String>() {
             @Override
             public void call(String t1) {
-              promise.fulfill(null);
               flag.set(true);
+              promise.fulfill(null);
             }
           });
 
@@ -453,7 +453,7 @@ public class PromiseTestsStrict {
         }
       });
 
-    latch.await(2l, TimeUnit.SECONDS);
+    latch.await(5l, TimeUnit.SECONDS);
 
     // value from promise must pass through
     // finally handler must fire
@@ -463,9 +463,54 @@ public class PromiseTestsStrict {
     assertTrue(flag.get());
   }
 
-  /* then() rejection after fin() */
+  /* then() handler after fin() with promise(string) */
   @Test
   public void testFinally5() throws Exception {
+    final CountDownLatch latch = new CountDownLatch(1);
+    final Result<Character> result = new Result<>();
+    final AtomicBoolean flag = new AtomicBoolean(false);
+
+    makePromise("Hello World")
+      .then(new PromiseFunction<String, Character>() {
+        @Override
+        public Character call(String result) {
+          return result.charAt(0);
+        }
+      })
+      .fin(new FinallyFunction<String>() {
+        @Override
+        public Promise<String> call() {
+          final Promise<String> promise = Promise.defer();
+
+          makePromise("Foo Bar").then(new PromiseAction<String>() {
+            @Override
+            public void call(String t1) {
+              flag.set(true);
+              promise.fulfill(t1);
+            }
+          });
+
+          return promise;
+        }
+      })
+      .then(new PromiseAction<Character>() {
+        @Override
+        public void call(Character value) {
+          result.value = value;
+          latch.countDown();
+        }
+      });
+
+    latch.await(5l, TimeUnit.SECONDS);
+
+    // make sure that the value returned from Finally is NOT passed through
+    assertEquals("Wrong value passed after calling finally", new Character('H'), result.value);
+    assertTrue(flag.get());
+  }
+
+  /* then() rejection after fin() */
+  @Test
+  public void testFinally6() throws Exception {
     final CountDownLatch latch = new CountDownLatch(1);
     final Result<Exception> result = new Result<>();
     final AtomicBoolean flag = new AtomicBoolean(false);

@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 
 import rx.Observer;
 import rx.Subscription;
+import rx.util.functions.Function;
 
 import com.darylteo.rx.promises.functions.FinallyAction;
 import com.darylteo.rx.promises.functions.FinallyFunction;
@@ -126,12 +127,7 @@ public class Promise<T> extends AbstractPromise<T> {
 
   @Override
   @SuppressWarnings("unchecked")
-  protected <O> Promise<O> _then(Object onFulfilled, Object onRejected, Object onFinally) {
+  protected <O> Promise<O> _then(Function onFulfilled, Function onRejected, Function onFinally) {
     return (Promise<O>) super._then(onFulfilled, onRejected, onFinally);
-  }
-
-  @Override
-  protected <O> Promise<O> _create() {
-    return Promise.defer();
   }
 }

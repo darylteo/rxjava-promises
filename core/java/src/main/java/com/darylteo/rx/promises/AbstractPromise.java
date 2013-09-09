@@ -136,10 +136,11 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
           // the finally block returned a promise, so we need to delay
           // fulfillment of the next promise until the returned promise is
           // fulfilled
-          ((AbstractPromise<Void>) result).then(
-            new PromiseAction<Void>() {
+          ((AbstractPromise<? super Object>) result)._then(
+            new PromiseAction<Object>() {
               @Override
-              public void call(Void v) {
+              public void call(Object v) {
+                System.out.println("YAY");
                 deferred.fulfill((O) that.value);
               }
             }, new PromiseAction<Exception>() {
@@ -147,7 +148,7 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
               public void call(Exception e) {
                 deferred.reject(e);
               }
-            });
+            }, null);
         } else {
           // nothing was returned by the finally block. We can go ahead and
           // forward the value/reason held by this promise on to the next
@@ -163,7 +164,7 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
 
       private void evaluateFulfilled() {
         if (onFulfilled != null) {
-          Object result = callFunction(onFinally, that.value);
+          Object result = callFunction(onFulfilled, that.value);
           evalResult(result);
         } else {
           // Sends the value forward. We assume that the casting will pass
@@ -276,25 +277,6 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
 
   public void become(AbstractPromise<T> other) {
     other.subscribe(this);
-  }
-
-  protected <O> AbstractPromise<O> then(
-    final Function onFulfilled
-    ) {
-    return this._then(onFulfilled, null, null);
-  }
-
-  protected <O> AbstractPromise<O> then(
-    final Function onFulfilled,
-    final Function onRejected
-    ) {
-    return this._then(onFulfilled, onRejected, null);
-  }
-
-  protected <O> AbstractPromise<O> fin(
-    final Function onFinally
-    ) {
-    return this._then(null, null, onFinally);
   }
 
   /* Observable Methods */
