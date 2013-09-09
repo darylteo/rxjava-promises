@@ -1,4 +1,4 @@
-import com.darylteo.gradle.plugins.*
+import com.darylteo.gradle.plugins.maven.MavenPlugin
 import com.darylteo.gradle.plugins.vertx.*
 
 buildscript {
@@ -13,6 +13,7 @@ buildscript {
   }
 }
 
+/* 
 subprojects {
   apply plugin: 'java'
   apply plugin: MavenPlugin
@@ -48,3 +49,4 @@ subprojects {
     }
   }
 }
+*/

@@ -1,17 +1,11 @@
-repositories {
-  mavenCentral()
-}
-
 dependencies {
   compile "com.netflix.rxjava:rxjava-core:${rxjavaVersion}"
-}
-
-test {
-  // Configure the test timeout
-  systemProperty 'vertx.test.timeout', 3
+  compile "com.netflix.rxjava:rxjava-groovy:${rxjavaVersion}"
 }
 
 maven {
+  artifactId 'rxjava-promises-java' 
+
   project {
     name 'RxJava Promises'
     description 'Promises implementation for RxJava'
