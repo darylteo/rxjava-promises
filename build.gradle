@@ -12,17 +12,3 @@ buildscript {
     classpath "com.darylteo:vertx-gradle-plugin:${vertxPluginVersion}"
   }
 }
-
-subprojects {
-  apply plugin: MavenPlugin
-
-  dependencies { testCompile "junit:junit:$junitVersion" }
-
-  maven {  
-    username = sonatypeUsername
-    password = sonatypePassword
-
-    repository = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-    snapshotRepository = 'https://oss.sonatype.org/content/repositories/snapshots/'
-  }
-}

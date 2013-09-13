@@ -4,3 +4,44 @@ subprojects {
   apply plugin: VertxProjectPlugin
   apply plugin: VertxPublishPlugin
 }
+
+subprojects {
+  apply plugin: MavenPlugin
+
+  maven {
+    username = sonatypeUsername
+    password = sonatypePassword
+
+    repository = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+    snapshotRepository = 'https://oss.sonatype.org/content/repositories/snapshots/'
+
+    artifactId "vertx-promises-${project.name}"
+    
+    project {
+      name "RxJava Promises - Vertx Module - ${project.name}"
+      description "Promises module for Vert.x - ${project.name}"
+      inceptionYear '2013'
+      url 'http://github.com/darylteo/rxjava-promises'
+
+      developers {
+        developer {
+          id 'darylteo'
+          name 'Daryl Teo'
+          email 'i.am@darylteo.com'
+        }
+      }
+
+      scm { url 'http://github.com/darylteo/rxjava-promises' }
+
+      licenses {
+        license {
+          name 'The Apache Software License, Version 2.0'
+          url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          distribution 'repo'
+        }
+      }
+
+      properties { setProperty('project.build.sourceEncoding', 'UTF8') }
+    }
+  }
+}

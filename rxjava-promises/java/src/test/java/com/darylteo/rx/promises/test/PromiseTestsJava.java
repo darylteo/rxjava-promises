@@ -13,12 +13,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.junit.Test;
 
-import com.darylteo.rx.java.promises.Promise;
-import com.darylteo.rx.java.promises.functions.FinallyAction;
-import com.darylteo.rx.java.promises.functions.FinallyFunction;
-import com.darylteo.rx.java.promises.functions.PromiseAction;
-import com.darylteo.rx.java.promises.functions.PromiseFunction;
-import com.darylteo.rx.java.promises.functions.RepromiseFunction;
+import com.darylteo.rx.promises.java.Promise;
+import com.darylteo.rx.promises.java.functions.FinallyAction;
+import com.darylteo.rx.promises.java.functions.FinallyFunction;
+import com.darylteo.rx.promises.java.functions.PromiseAction;
+import com.darylteo.rx.promises.java.functions.PromiseFunction;
+import com.darylteo.rx.promises.java.functions.RepromiseFunction;
 
 public class PromiseTestsJava {
 

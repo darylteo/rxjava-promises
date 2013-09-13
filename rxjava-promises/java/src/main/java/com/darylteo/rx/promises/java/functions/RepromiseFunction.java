@@ -1,6 +1,6 @@
-package com.darylteo.rx.java.promises.functions;
+package com.darylteo.rx.promises.java.functions;
 
-import com.darylteo.rx.java.promises.Promise;
+import com.darylteo.rx.promises.java.Promise;
 
 import rx.util.functions.Func1;
 

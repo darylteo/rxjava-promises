@@ -1,4 +1,4 @@
-package com.darylteo.rx.java.promises;
+package com.darylteo.rx.promises.java;
 
 import java.util.LinkedHashMap;
 
@@ -6,13 +6,13 @@ import rx.Observer;
 import rx.Subscription;
 import rx.util.functions.Function;
 
-import com.darylteo.rx.java.promises.Promise;
-import com.darylteo.rx.java.promises.functions.FinallyAction;
-import com.darylteo.rx.java.promises.functions.FinallyFunction;
-import com.darylteo.rx.java.promises.functions.PromiseAction;
-import com.darylteo.rx.java.promises.functions.PromiseFunction;
-import com.darylteo.rx.java.promises.functions.RepromiseFunction;
 import com.darylteo.rx.promises.AbstractPromise;
+import com.darylteo.rx.promises.java.Promise;
+import com.darylteo.rx.promises.java.functions.FinallyAction;
+import com.darylteo.rx.promises.java.functions.FinallyFunction;
+import com.darylteo.rx.promises.java.functions.PromiseAction;
+import com.darylteo.rx.promises.java.functions.PromiseFunction;
+import com.darylteo.rx.promises.java.functions.RepromiseFunction;
 
 /**
  * A Promise represents a request that will be fulfilled sometime in the future, most usually by an asynchrous task executed on the Vert.x Event Loop. It allows you to assign handlers to deal with the return results of asynchronus tasks, and to flatten "pyramids of doom" or "callback hell".

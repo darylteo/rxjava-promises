@@ -1,34 +1,7 @@
 apply plugin: 'groovy'
 
-vertx { config { includes 'io.vertx~lang-groovy~2.0.0-final' } }
-
-dependencies { compile project(':rxjava-promises:groovy') }
-
-maven {
-  project {
-    name 'RxJava Promises - Vertx Module - Groovy'
-    description 'Promises module for Vert.x - Groovy'
-    inceptionYear '2013'
-    url 'http://github.com/darylteo/rxjava-promises'
-
-    developers {
-      developer {
-        id 'darylteo'
-        name 'Daryl Teo'
-        email 'i.am@darylteo.com'
-      }
-    }
-
-    scm { url 'http://github.com/darylteo/rxjava-promises' }
-
-    licenses {
-      license {
-        name 'The Apache Software License, Version 2.0'
-        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-        distribution 'repo'
-      }
-    }
-
-    properties { setProperty('project.build.sourceEncoding', 'UTF8') }
-  }
+vertx {
+  config { includes 'io.vertx~lang-groovy~2.0.0-final' }
 }
+
+dependencies { compile project(':rxjava-promises:core') }

@@ -1,14 +1,13 @@
-package groovy;
+package com.darylteo.rx.promises.groovy.tests;
 
 import static org.junit.Assert.*
 
-import java.awt.Rectangle
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
 import org.junit.Test
 
-import com.darylteo.rx.groovy.promises.Promise
+import com.darylteo.rx.promises.groovy.Promise
 
 /* http://promises-aplus.github.io/promises-spec/ */
 class PromisesTestGroovy {

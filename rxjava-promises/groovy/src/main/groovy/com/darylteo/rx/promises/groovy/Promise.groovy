@@ -1,4 +1,4 @@
-package com.darylteo.rx.groovy.promises
+package com.darylteo.rx.promises.groovy
 
 import rx.Observer
 import rx.Subscription
