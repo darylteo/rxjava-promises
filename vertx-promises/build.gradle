@@ -3,10 +3,13 @@ import com.darylteo.gradle.plugins.vertx.*
 subprojects {
   apply plugin: VertxProjectPlugin
   apply plugin: VertxPublishPlugin
-}
 
-subprojects {
-  apply plugin: MavenPlugin
+  vertx {
+    version '2.0.1-final'
+    module { name "vertx-promises-${project.name}" }
+  }
+  
+  version = '1.1.0-ALPHA2'
 
   maven {
     username = sonatypeUsername
@@ -16,7 +19,7 @@ subprojects {
     snapshotRepository = 'https://oss.sonatype.org/content/repositories/snapshots/'
 
     artifactId "vertx-promises-${project.name}"
-    
+
     project {
       name "RxJava Promises - Vertx Module - ${project.name}"
       description "Promises module for Vert.x - ${project.name}"

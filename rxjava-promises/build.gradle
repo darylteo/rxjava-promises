@@ -4,13 +4,17 @@ subprojects {
   apply plugin: 'java'
   apply plugin: MavenPlugin
 
+  version = '1.1.1'
+
   repositories { mavenCentral() }
   dependencies { testCompile 'junit:junit:4.11' }
-}
 
-subprojects {
   maven {
-    artifactId "rxjava-promises-${project.name}"
+    username = sonatypeUsername
+    password = sonatypePassword
+
+    repository = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
+    snapshotRepository = 'https://oss.sonatype.org/content/repositories/snapshots/'
 
     project {
       name "RxJava Promises - ${project.name}"
@@ -39,6 +43,8 @@ subprojects {
       properties { setProperty('project.build.sourceEncoding', 'UTF8') }
     }
   }
+
+  archivesBaseName = "rxjava-promises-${project.name}"
 }
 
 configure(subprojects - project(':rxjava-promises:core')) {
