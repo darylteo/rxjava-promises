@@ -1,0 +1,6 @@
+import com.darylteo.gradle.plugins.vertx.*
+
+subprojects {
+  apply plugin: VertxProjectPlugin
+  apply plugin: VertxPublishPlugin
+}

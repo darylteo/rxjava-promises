@@ -1,10 +1,7 @@
-[
-   'core',
-   'java',
-   'groovy'
-]
-.collect {
-   ":rxjava-promises:$it"
-}.each {
-   include it
-}
+include ':rxjava-promises:core'
+
+include ':rxjava-promises:java'
+include ':rxjava-promises:groovy'
+
+include ':vertx-promises:java'
+include ':vertx-promises:groovy'

@@ -8,7 +8,38 @@ subprojects {
   dependencies { testCompile 'junit:junit:4.11' }
 }
 
-project(':rxjava-promises:groovy') { apply plugin: 'groovy' }
+subprojects {
+  maven {
+    artifactId "rxjava-promises-${project.name}"
+
+    project {
+      name "RxJava Promises - ${project.name}"
+      description "Promises implementation for RxJava - ${project.name}"
+      inceptionYear '2013'
+      url 'http://github.com/darylteo/rxjava-promises'
+
+      developers {
+        developer {
+          id 'darylteo'
+          name 'Daryl Teo'
+          email 'i.am@darylteo.com'
+        }
+      }
+
+      scm { url 'http://github.com/darylteo/rxjava-promises' }
+
+      licenses {
+        license {
+          name 'The Apache Software License, Version 2.0'
+          url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          distribution 'repo'
+        }
+      }
+
+      properties { setProperty('project.build.sourceEncoding', 'UTF8') }
+    }
+  }
+}
 
 configure(subprojects - project(':rxjava-promises:core')) {
   dependencies { compile project(':rxjava-promises:core') }

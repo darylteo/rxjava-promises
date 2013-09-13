@@ -1,14 +1,15 @@
 package com.darylteo.vertx.promises.test;
 
+import static org.vertx.testtools.VertxAssert.assertEquals;
+import static org.vertx.testtools.VertxAssert.testComplete;
+
 import org.junit.Test;
 import org.vertx.java.core.Handler;
 import org.vertx.testtools.TestVerticle;
 
-import static org.vertx.testtools.VertxAssert.*;
-
-import com.darylteo.rx.promises.functions.PromiseAction;
-import com.darylteo.rx.promises.functions.PromiseFunction;
-import com.darylteo.rx.promises.functions.RepromiseFunction;
+import com.darylteo.rx.java.promises.functions.PromiseAction;
+import com.darylteo.rx.java.promises.functions.PromiseFunction;
+import com.darylteo.rx.java.promises.functions.RepromiseFunction;
 import com.darylteo.vertx.promises.Promise;
 
 public class PromiseTests extends TestVerticle {
@@ -24,7 +25,7 @@ public class PromiseTests extends TestVerticle {
       }
     }).then(new RepromiseFunction<String, String>() {
       @Override
-      public com.darylteo.rx.promises.Promise<String> call(final String t1) {
+      public Promise<String> call(final String t1) {
         final Promise<String> p = Promise.defer();
         vertx.setTimer(1000l, new Handler<Long>() {
           @Override
