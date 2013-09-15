@@ -1,3 +1,3 @@
 dependencies { 
-  vertxlibs project(':rxjava-promises:core') 
+  compile project(':rxjava-promises:core') 
 }
