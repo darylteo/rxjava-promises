@@ -14,6 +14,13 @@ in places where blocking calls are undesired.
 
 ## Notes ##
 
+### Versioning Information
+As there is a close dependency between the two subset of projects, the versioning strategy will be as follows:
+
+ - both groups of projects will always use the same major and minor versions.
+ - revision numbers will remain individual to each group. For example:
+ a release of *vertx-promises:X.Y.?* will always use *rxjava-promises.core:X.Y.?* in its dependencies.
+
 ### Technical Details ###
 This library implements **most** of the [Promises/A+](http://promises-aplus.github.io/promises-spec/) spec. 
 It is also based on [Q](https://github.com/kriskowal/q) for Node.JS, which adds additional conveniences such 
