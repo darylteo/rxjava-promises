@@ -19,6 +19,9 @@ This library implements **most** of the [Promises/A+](http://promises-aplus.gith
 It is also based on [Q](https://github.com/kriskowal/q) for Node.JS, which adds additional conveniences such 
 as reject and finally. Finally, it is built using the [RxJava](https://github.com/Netflix/RxJava) library.
 
+This library is unlike other similar language based implementations (such as Futures, or Groovy Promise)
+as it is completely unblocking. It is designed to work with asynchronous-callback-heavy platforms.
+
 ### Vert.x ###
 
 The primary motivation for this project is to provide a more convenient means of callback flow-control for the 
