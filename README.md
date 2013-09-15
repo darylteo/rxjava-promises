@@ -44,6 +44,10 @@ lacking in some areas. Work will continue to improve its conformance with the sp
 
 Only Java and Groovy are supported currently. More languages should come (if interest is high).
 
+### Overall Documentation and Testing Quality
+
+This code-base is currently lacking in this area, and I hope I will improve this thoroughly in the future.
+
 ## Documentation ##
 
 View the README.md in each project for documentation.
