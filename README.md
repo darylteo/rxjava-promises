@@ -20,7 +20,9 @@ It is also based on [Q](https://github.com/kriskowal/q) for Node.JS, which adds 
 as reject and finally. Finally, it is built using the [RxJava](https://github.com/Netflix/RxJava) library.
 
 This library is unlike other similar language based implementations (such as Futures, or Groovy Promise)
-as it is completely unblocking. It is designed to work with asynchronous-callback-heavy platforms.
+as it is completely unblocking. It is designed to work with asynchronous-callback-heavy platforms. 
+Furthermore, it has several additional classes that aims to improve the type-safety of Java-based usage,
+while minimising the verbosity by generics inferencing.
 
 ### Vert.x ###
 
