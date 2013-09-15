@@ -12,7 +12,7 @@
 
 ```javascript
 {
-  includes 'com.darylteo~vertx-promises-{lang}~1.1.0-ALPHA2`
+  includes: "com.darylteo~vertx-promises-{lang}~1.1.0-ALPHA2"
 }
 ````
 
