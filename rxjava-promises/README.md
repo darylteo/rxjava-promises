@@ -1,16 +1,16 @@
 # RxJava-Promises #
 
-## Documentation
-
-### Maven 
+## Maven 
 
 ```xml
 <dependency>
-  <groupId></groupId>
-  <groupId></groupId>
+  <groupId>com.darylteo</groupId>
+  <artifactId>rxjava-promises-{lang}</artifactId>
+  <version>1.1.1</version>
 </dependency>
 ````
 
+## Documentation
 
 ### Creating a Promise
 
