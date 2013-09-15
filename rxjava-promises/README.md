@@ -2,6 +2,16 @@
 
 ## Documentation
 
+### Maven 
+
+```xml
+<dependency>
+  <groupId></groupId>
+  <groupId></groupId>
+</dependency>
+````
+
+
 ### Creating a Promise
 
 Either use the constructor or the defer() static method
