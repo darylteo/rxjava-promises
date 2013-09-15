@@ -2,7 +2,7 @@
 
 ## Maven 
 
-```xml
+```XML
 <dependency>
   <groupId>com.darylteo</groupId>
   <artifactId>rxjava-promises-{lang}</artifactId>
