@@ -107,8 +107,8 @@ com.darylteo.rx.promises.AbstractPromise. Implement the 3 functions (and any ove
  - finally
 
 View an example in the 
-[java](blob/master/rxjava-promises/java/src/main/java/com/darylteo/rx/promises/java/Promise.java) 
-and [groovy](blob/master/rxjava-promises/groovy/src/main/groovy/com/darylteo/rx/promises/groovy/Promise.groovy) 
+[java](java/src/main/java/com/darylteo/rx/promises/java/Promise.java) 
+and [groovy](groovy/src/main/groovy/com/darylteo/rx/promises/groovy/Promise.groovy) 
 implementations.
 
 ## Java vs Other Languages
