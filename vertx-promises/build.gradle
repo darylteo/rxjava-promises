@@ -6,7 +6,14 @@ subprojects {
 
   vertx {
     version '2.0.1-final'
-    module { name "vertx-promises-${project.name}" }
+    module { 
+      name "vertx-promises-${project.name}" 
+    }
+    config {
+      description "Promises module for Vert.x - ${project.name}"
+      licenses 'The Apache Software License, Version 2.0'
+      author 'Daryl Teo'
+    }
   }
   
   version = '1.1.0-ALPHA2'
