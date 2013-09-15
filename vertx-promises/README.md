@@ -1,7 +1,5 @@
 # Vertx-Promises
 
-## How to get it
-
 ### Maven
 ```XML
 <dependency>
