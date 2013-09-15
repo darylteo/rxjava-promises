@@ -2,6 +2,7 @@
 
 ## How to get it
 
+### Maven
 ```XML
 <dependency>
   <groupId>com.darylteo</groupId>
@@ -9,7 +10,7 @@
   <version>1.1.0-ALPHA2</version>
 </dependency>
 ````
-
+### mod.json
 ```javascript
 {
   includes: "com.darylteo~vertx-promises-{lang}~1.1.0-ALPHA2"
