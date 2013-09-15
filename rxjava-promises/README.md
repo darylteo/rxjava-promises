@@ -85,6 +85,18 @@ p1.fin(new FinallyFunction<String>() {
 });
 ````
 
+### fulfill() / reject()
+
+Fulfilling or Rejecting a promise is straightforward.
+
+```java
+// fulfilling a promise
+p1.fulfill("So Long");
+
+// rejecting
+p1.reject("And thanks for all the fish.");
+````
+
 ## Java vs Other Languages
 
 ### Java 
