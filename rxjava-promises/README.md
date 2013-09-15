@@ -97,6 +97,20 @@ p1.fulfill("So Long");
 p1.reject("And thanks for all the fish.");
 ````
 
+## Implementing a different Language
+
+To implement Promises in a JVM Language of your choice, you should write a subclass implementation of 
+com.darylteo.rx.promises.AbstractPromise. Implement the 3 functions (and any overloads) as required: 
+
+ - then
+ - fail
+ - finally
+
+View an example in the 
+[java](blob/master/rxjava-promises/java/src/main/java/com/darylteo/rx/promises/java/Promise.java) 
+and [groovy](blob/master/rxjava-promises/groovy/src/main/groovy/com/darylteo/rx/promises/groovy/Promise.groovy) 
+implementations.
+
 ## Java vs Other Languages
 
 ### Java 
