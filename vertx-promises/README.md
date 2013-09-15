@@ -1,5 +1,22 @@
 # Vertx-Promises
 
+## How to get it
+
+```XML
+<dependency>
+  <groupId>com.darylteo</groupId>
+  <artifactId>vertx-promises-{lang}</artifactId>
+  <version>1.1.0-ALPHA2</version>
+</dependency>
+````
+
+```javascript
+{
+  includes 'com.darylteo~vertx-promises-{lang}~1.1.0-ALPHA2`
+}
+````
+
+
 ## Vertx Specific Functionality
 
 The main addition to the Vertx version of RxJava-Promises is its ability to be used as a Vertx Handler. 
