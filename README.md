@@ -7,6 +7,11 @@ Promises library for JVM based languages
 Promises is a pattern for callback-based flow control. This particular implementation of Promises is useful
 in places where blocking calls are undesired.
 
+## Where to Start
+
+ - If you wish to use RxJava-Promises as a standalone library, see [RxJava-Promises](rxjava-promises/). 
+ - If you wish to use RxJava-Promises as a vert.x Module, see [Vertx-Promises](vertx-promises/).
+
 ## Notes ##
 
 ### Technical Details ###
