@@ -1,4 +1,4 @@
-# Rxjava-Promises #
+# RxJava-Promises #
 
 ## Documentation
 
@@ -53,7 +53,9 @@ p1.then(new PromiseAction<String>() {
 });
 ````
 
-Alternatively, you may use fail(onRejected).
+### fail()
+
+As a convenience, you may use fail(onRejected).
 
 ```java
 p1.fail(new PromiseAction<Exception>() {
@@ -85,17 +87,27 @@ p1.fin(new FinallyFunction<String>() {
 
 ## Java vs Other Languages
 
+### Java 
 As you can see from the code above, while Promises offers a solution to "callback hell", its usage in Java
-is still rather verbose, and due to the type-safe nature of Java, when using both onFulfilled and onRejected, 
-you must always return the same return-type as its handler will be expecting a single class. If, for some 
-reason, you absolutely must allow for different return types, you should then use a container class, or 
-a common superclass.
+is still rather verbose, and due to the type-safe nature of Java, there are a couple of rules that must be followed:
+
+ - when using both onFulfilled and onRejected, you must always return the same return-type as its handler will 
+ be expecting a single class. If, for some reason, you absolutely must allow for different return types, you 
+ should then use a container class, or a common superclass.
+ - if calling fail(), you may not change the return type. The fulfilled value will be passed through the chain
+ which will still be expecting the same data type.
 
 There are also several handler implementations available for convenience to Java users.
 
+### Other Languages
+
 If you are using a different language implementation (for example, Groovy), you will be able to sacrifice 
-the type-safety of your code to avoid that limitation. For example, in Groovy, your code should look more like
-this:
+the type-safety of your code to avoid that limitation. The amount of convenience that is awarded is determined by:
+
+ - support for dynamic typing
+ - "first-class" functions (or closures, lambdas, delegates etc.)
+
+For example, in Groovy, your code should look more like this:
 
 ```groovy
 aPromiseReturningFunction()
