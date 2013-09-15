@@ -1,6 +1,6 @@
 # RxJava-Promises #
 
-Promises library for Vert.x 
+Promises library for JVM based languages
 
 ## What is it? ##
 
