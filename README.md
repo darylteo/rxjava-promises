@@ -10,10 +10,9 @@ in places where blocking calls are undesired.
 ## Notes ##
 
 ### Technical Details ###
-This library partially implements the [Promises/A+](http://promises-aplus.github.io/promises-spec/) spec with 
-the exception of 4.1, as most languages do not have an equivalent of setTimer for Javascript. It is also based 
-on [Q](https://github.com/kriskowal/q) for Node.JS, which adds additional conveniences such as reject and finally. 
-Finally, it is built using the [RxJava](https://github.com/Netflix/RxJava) library.
+This library implements **most** of the [Promises/A+](http://promises-aplus.github.io/promises-spec/) spec. 
+It is also based on [Q](https://github.com/kriskowal/q) for Node.JS, which adds additional conveniences such 
+as reject and finally. Finally, it is built using the [RxJava](https://github.com/Netflix/RxJava) library.
 
 ### Vert.x ###
 
@@ -23,8 +22,19 @@ used in other places as well. Therefore, the project contains two separate group
 
 ## Future Work ##
 
+### rx.Observable<> Limitations
+
 While built on the RxJava library, it currently does not fully support the polyglot nature of the library as 
 it is still in flux. Once that work has stabilised, a working implementation can be released.
+
+### Promises/A+ spec 
+
+This implementation tries its best to fulfill all the points proposed in the Promises/A+ spec, but is still
+lacking in some areas. Work will continue to improve its conformance with the spec.
+
+### More languages
+
+Only Java and Groovy are supported currently. More languages should come (if interest is high).
 
 ## Documentation ##
 
