@@ -1,52 +1,60 @@
-import com.darylteo.gradle.plugins.maven.MavenPlugin
-
 subprojects {
   apply plugin: 'java'
-  apply plugin: MavenPlugin
+  apply plugin: 'eclipse'
+  apply from: rootProject.file('gradle/sonatype.gradle')
 
-  repositories { mavenCentral() }
-  dependencies { testCompile 'junit:junit:4.11' }
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    testCompile 'junit:junit:4.11'
+  }
 
-  version='1.1.1'
-  
-  maven {
-    username = sonatypeUsername
-    password = sonatypePassword
+  // Target Java 6 for Android users!
+  sourceCompatibility = '1.6'
 
-    repository = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-    snapshotRepository = 'https://oss.sonatype.org/content/repositories/snapshots/'
+  group = 'com.darylteo'
+  version = '1.1.2'
 
-    project {
-      name "RxJava Promises - ${project.name}"
-      description "Promises implementation for RxJava - ${project.name}"
-      inceptionYear '2013'
-      url 'http://github.com/darylteo/rxjava-promises'
+  uploadArchives {
+    repositories {
+      mavenDeployer {
+        pom {
+          project {
+            name "RxJava Promises - ${project.name}"
+            description "Promises implementation for RxJava - ${project.name}"
+            inceptionYear '2013'
+            url 'http://github.com/darylteo/rxjava-promises'
 
-      developers {
-        developer {
-          id 'darylteo'
-          name 'Daryl Teo'
-          email 'i.am@darylteo.com'
+            developers {
+              developer {
+                id 'darylteo'
+                name 'Daryl Teo'
+                email 'i.am@darylteo.com'
+              }
+            }
+
+            scm { url 'http://github.com/darylteo/rxjava-promises' }
+
+            licenses {
+              license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+              }
+            }
+
+            properties {
+              'project.build.sourceEncoding'('UTF8')
+            }
+          }
         }
       }
-
-      scm { url 'http://github.com/darylteo/rxjava-promises' }
-
-      licenses {
-        license {
-          name 'The Apache Software License, Version 2.0'
-          url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-          distribution 'repo'
-        }
-      }
-
-      properties { setProperty('project.build.sourceEncoding', 'UTF8') }
     }
   }
 
-  archivesBaseName = "rxjava-promises-${project.name}"
 }
 
-configure(subprojects - project(':rxjava-promises:core')) {
-  dependencies { compile project(':rxjava-promises:core') }
+configure(subprojects - project(':rxjava-promises:rxjava-promises-core')) {
+  dependencies { compile project(':rxjava-promises:rxjava-promises-core') }
 }

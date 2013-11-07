@@ -1,7 +1,0 @@
-apply plugin: 'groovy'
-
-vertx { config { includes 'io.vertx~lang-groovy~2.0.0-final' } }
-
-dependencies { 
-  compile project(':rxjava-promises:core') 
-}

@@ -1,3 +1,0 @@
-dependencies { 
-  compile "com.netflix.rxjava:rxjava-core:${rxjavaVersion}" 
-}

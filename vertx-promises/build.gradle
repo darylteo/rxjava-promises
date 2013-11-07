@@ -1,60 +1,67 @@
-import com.darylteo.gradle.plugins.vertx.*
-
 subprojects {
-  apply plugin: VertxProjectPlugin
-  apply plugin: VertxPublishPlugin
+  apply plugin: 'vertx'
+  apply from: rootProject.file('gradle/sonatype.gradle')
 
+  group = 'com.darylteo'
+  version = '1.1.2'
+  
   vertx {
-    version '2.0.1-final'
-    module {  
-      name "vertx-promises-${project.name}"  
+    platform {
+      version '2.0.2-final'
+      tools '2.0.0-final'
     }
+
     config {
+    }
+
+    info {
       description "Promises module for Vert.x - ${project.name}"
       licenses 'The Apache Software License, Version 2.0'
       author 'Daryl Teo'
 
-      keywords 'promise', 'promises', 'handler', 'future', 'continuation', 'callback', 'async'
+      keywords 'promise,promises,handler,future,continuation,callback,async'
       homepage 'https://github.com/darylteo/rxjava-promises'
     }
   }
 
-  version = '1.1.0-ALPHA2'
+  artifacts {
+    archives modZip
+  }
 
-  maven {
-    username = sonatypeUsername
-    password = sonatypePassword
+  uploadArchives {
+    repositories {
+      mavenDeployer {
+        pom {
+          project {
+            name "RxJava Promises - Vertx Module - ${project.name}"
+            description "Promises module for Vert.x - ${project.name}"
+            inceptionYear '2013'
+            url 'http://github.com/darylteo/rxjava-promises'
 
-    repository = 'https://oss.sonatype.org/service/local/staging/deploy/maven2/'
-    snapshotRepository = 'https://oss.sonatype.org/content/repositories/snapshots/'
+            developers {
+              developer {
+                id 'darylteo'
+                name 'Daryl Teo'
+                email 'i.am@darylteo.com'
+              }
+            }
 
-    artifactId "vertx-promises-${project.name}"
+            scm { url 'http://github.com/darylteo/rxjava-promises' }
 
-    project {
-      name "RxJava Promises - Vertx Module - ${project.name}"
-      description "Promises module for Vert.x - ${project.name}"
-      inceptionYear '2013'
-      url 'http://github.com/darylteo/rxjava-promises'
+            licenses {
+              license {
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                distribution 'repo'
+              }
+            }
 
-      developers {
-        developer {
-          id 'darylteo'
-          name 'Daryl Teo'
-          email 'i.am@darylteo.com'
+            properties { 
+              'project.build.sourceEncoding'('UTF8')
+            }
+          }
         }
       }
-
-      scm { url 'http://github.com/darylteo/rxjava-promises' }
-
-      licenses {
-        license {
-          name 'The Apache Software License, Version 2.0'
-          url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-          distribution 'repo'
-        }
-      }
-
-      properties { setProperty('project.build.sourceEncoding', 'UTF8') }
     }
   }
 }

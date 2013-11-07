@@ -1,14 +1,8 @@
-import com.darylteo.gradle.plugins.maven.MavenPlugin
-import com.darylteo.gradle.plugins.vertx.*
-
 buildscript {
   repositories {
     mavenCentral()
     mavenLocal()
   }
 
-  dependencies {
-    classpath "com.darylteo:maven-plugin:${mavenPluginVersion}"
-    classpath "com.darylteo:vertx-gradle-plugin:${vertxPluginVersion}"
-  }
+  dependencies { classpath "com.darylteo.vertx:vertx-gradle-plugin:${vertxPluginVersion}" }
 }

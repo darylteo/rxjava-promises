@@ -1,7 +1,7 @@
-include ':rxjava-promises:core'
+include ':rxjava-promises:rxjava-promises-core'
 
-include ':rxjava-promises:java'
-include ':rxjava-promises:groovy'
+include ':rxjava-promises:rxjava-promises-java'
+include ':rxjava-promises:rxjava-promises-groovy'
 
-include ':vertx-promises:java'
-include ':vertx-promises:groovy'
+include ':vertx-promises:vertx-promises-java'
+include ':vertx-promises:vertx-promises-groovy'
