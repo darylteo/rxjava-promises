@@ -6,7 +6,7 @@
 <dependency>
   <groupId>com.darylteo</groupId>
   <artifactId>rxjava-promises-{lang}</artifactId>
-  <version>1.1.1</version>
+  <version>1.1.2</version>
 </dependency>
 ````
 
