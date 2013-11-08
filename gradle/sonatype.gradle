@@ -5,9 +5,7 @@ def release = { !project.version.endsWith('-SNAPSHOT') }
 def sonatypeUsername = { project.sonatypeUsername ?: '' }
 def sonatypePassword = { project.sonatypePassword ?: '' }
 
-configurations {
-  archives
-}
+configurations { archives }
 
 task sourcesJar(type:Jar) {
   from sourceSets.main.allSource
@@ -25,7 +23,7 @@ artifacts {
 }
 
 signing {
-  required { release() && gradle.taskGraph.hasTask('uploadArchives') }
+  required { release() && gradle.taskGraph.hasTask(uploadArchives) }
   sign configurations.archives
 }
 
