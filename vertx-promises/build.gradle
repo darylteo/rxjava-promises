@@ -2,7 +2,7 @@ subprojects {
   apply plugin: 'vertx'
   apply from: rootProject.file('gradle/sonatype.gradle')
 
-  group = 'com.darylteo'
+  group = 'com.darylteo.vertx'
   version = '1.1.0'
   
   vertx {
