@@ -14,7 +14,7 @@ subprojects {
   sourceCompatibility = '1.6'
 
   group = 'com.darylteo'
-  version = artifactVersion
+  version = '1.1.2'
 
   uploadArchives {
     repositories {
