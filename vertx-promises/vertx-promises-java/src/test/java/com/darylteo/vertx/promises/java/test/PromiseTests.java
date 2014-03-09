@@ -1,16 +1,15 @@
 package com.darylteo.vertx.promises.java.test;
 
-import static org.vertx.testtools.VertxAssert.assertEquals;
-import static org.vertx.testtools.VertxAssert.testComplete;
-
-import org.junit.Test;
-import org.vertx.java.core.Handler;
-import org.vertx.testtools.TestVerticle;
-
 import com.darylteo.vertx.promises.java.Promise;
 import com.darylteo.vertx.promises.java.functions.PromiseAction;
 import com.darylteo.vertx.promises.java.functions.PromiseFunction;
 import com.darylteo.vertx.promises.java.functions.RepromiseFunction;
+import org.junit.Test;
+import org.vertx.java.core.Handler;
+import org.vertx.testtools.TestVerticle;
+
+import static org.vertx.testtools.VertxAssert.assertEquals;
+import static org.vertx.testtools.VertxAssert.testComplete;
 
 public class PromiseTests extends TestVerticle {
   @Test

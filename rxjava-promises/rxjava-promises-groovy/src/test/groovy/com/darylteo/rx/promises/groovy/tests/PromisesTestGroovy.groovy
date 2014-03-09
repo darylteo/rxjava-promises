@@ -1,15 +1,15 @@
-package com.darylteo.rx.promises.groovy.tests;
+package com.darylteo.rx.promises.groovy.tests
 
-import static org.junit.Assert.*
+import com.darylteo.rx.promises.groovy.Promise
+import org.junit.Test
 
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-import org.junit.Test
-
-import com.darylteo.rx.promises.groovy.Promise
+import static org.junit.Assert.*
 
 /* http://promises-aplus.github.io/promises-spec/ */
+
 class PromisesTestGroovy {
   @Test
   public void testStates() {
@@ -50,21 +50,21 @@ class PromisesTestGroovy {
     makePromise('Hello').then({
     }, {
     })
-    makePromise('Hello').then onFulfilled:{
+    makePromise('Hello').then onFulfilled: {
     }
-    makePromise('Hello').then onRejected:{
+    makePromise('Hello').then onRejected: {
     }
-    makePromise('Hello').then onFulfilled:{
-    }, onRejected:{
+    makePromise('Hello').then onFulfilled: {
+    }, onRejected: {
     }
     makePromise('Hello').then()
   }
 
   @Test
-  public void testThen(){
+  public void testThen() {
     CountDownLatch latch = new CountDownLatch(3)
 
-    makePromise('Hello').then{ result ->
+    makePromise('Hello').then { result ->
       assertEquals 'Hello', result
       latch.countDown()
       return result.toUpperCase()
@@ -76,7 +76,7 @@ class PromisesTestGroovy {
       latch.countDown()
     }
 
-    latch.await(2l,TimeUnit.SECONDS);
+    latch.await(2l, TimeUnit.SECONDS);
     assertEquals 0, latch.count
   }
 
@@ -85,11 +85,11 @@ class PromisesTestGroovy {
     CountDownLatch latch = new CountDownLatch(2)
     def invalids = []
 
-    makeRejection('Hello').then{ result -> invalids += result }
+    makeRejection('Hello').then { result -> invalids += result }
     makeRejection('Hello').then({ result -> invalids += result }, { latch.countDown() })
-    makeRejection('Hello').then onFulfilled:{ result -> invalids += result }, onRejected: { latch.countDown() }
+    makeRejection('Hello').then onFulfilled: { result -> invalids += result }, onRejected: { latch.countDown() }
 
-    latch.await(2l,TimeUnit.SECONDS);
+    latch.await(2l, TimeUnit.SECONDS);
     assertTrue invalids.empty
     assertEquals 0, latch.count
   }
@@ -99,18 +99,18 @@ class PromisesTestGroovy {
     CountDownLatch latch = new CountDownLatch(5)
     def invalids = []
 
-    makeRejection('Hello').fin{ latch.countDown() }
-    makeRejection('Hello').fin{
+    makeRejection('Hello').fin { latch.countDown() }
+    makeRejection('Hello').fin {
       latch.countDown()
       return 'Foo'
     }.then({ result -> invalids += result }, { latch.countDown() })
-    makeRejection('Hello').fin{
+    makeRejection('Hello').fin {
       latch.countDown()
       makePromise('Foo')
     }.then({ result -> invalids += result }, { latch.countDown() })
-    makeRejection('Hello').then { result -> invalids += result }.fin{ latch.countDown() }.fail {latch.countDown()}
+    makeRejection('Hello').then { result -> invalids += result }.fin { latch.countDown() }.fail { latch.countDown() }
 
-    latch.await(2l,TimeUnit.SECONDS);
+    latch.await(2l, TimeUnit.SECONDS);
     assertTrue invalids.empty
     assertEquals 0, latch.count
   }

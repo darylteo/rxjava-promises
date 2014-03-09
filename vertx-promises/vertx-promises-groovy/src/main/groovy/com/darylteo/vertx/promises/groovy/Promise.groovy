@@ -1,12 +1,10 @@
 package com.darylteo.vertx.promises.groovy
 
-import org.vertx.java.core.Handler
-
-import rx.Subscription
-import rx.util.functions.Action0
-import rx.util.functions.Func1
-
 import com.darylteo.rx.promises.AbstractPromise
+import org.vertx.java.core.Handler
+import rx.Subscription
+import rx.functions.Action0
+import rx.functions.Func1
 
 public class Promise<T> extends AbstractPromise<T> implements Handler<T> {
   public static <T> Promise<T> defer() {
@@ -34,7 +32,7 @@ public class Promise<T> extends AbstractPromise<T> implements Handler<T> {
   }
 
   private <O> Promise<O> promise(Closure<O> onFulfilled, Closure<O> onRejected, Closure<O> onFinally) {
-    return (Promise<O>) super._then(onFulfilled as Func1<T,O>, onRejected as Func1<T,O>, onFinally as Action0<?>)
+    return (Promise<O>) super._then(onFulfilled as Func1<T, O>, onRejected as Func1<T, O>, onFinally as Action0<?>)
   }
 
   @Override

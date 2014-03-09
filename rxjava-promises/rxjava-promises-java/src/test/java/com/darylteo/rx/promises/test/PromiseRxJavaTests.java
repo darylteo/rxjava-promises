@@ -1,15 +1,13 @@
 package com.darylteo.rx.promises.test;
 
-import static org.junit.Assert.assertEquals;
+import com.darylteo.rx.promises.java.Promise;
+import org.junit.Test;
+import rx.functions.Action1;
+import rx.functions.Func1;
 
 import java.util.concurrent.CountDownLatch;
 
-import org.junit.Test;
-
-import rx.util.functions.Action1;
-import rx.util.functions.Func1;
-
-import com.darylteo.rx.promises.java.Promise;
+import static org.junit.Assert.assertEquals;
 
 public class PromiseRxJavaTests {
 

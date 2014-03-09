@@ -1,24 +1,14 @@
 package com.darylteo.rx.promises.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import com.darylteo.rx.promises.java.Promise;
+import com.darylteo.rx.promises.java.functions.*;
+import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.junit.Test;
-
-import com.darylteo.rx.promises.java.Promise;
-import com.darylteo.rx.promises.java.functions.FinallyAction;
-import com.darylteo.rx.promises.java.functions.FinallyFunction;
-import com.darylteo.rx.promises.java.functions.PromiseAction;
-import com.darylteo.rx.promises.java.functions.PromiseFunction;
-import com.darylteo.rx.promises.java.functions.RepromiseFunction;
+import static org.junit.Assert.*;
 
 public class PromiseTestsJava {
 
@@ -175,20 +165,20 @@ public class PromiseTestsJava {
           return result.charAt(20); // Exception
         }
       }).then(
-        new PromiseAction<Character>() {
-          @Override
-          public void call(Character value) {
-            fail("Promise not correctly calling failure handler when exception or rejection occurs");
-          }
-        },
-        new PromiseAction<Exception>() {
-          @Override
-          public void call(Exception e) {
-            assertEquals("Exception is not StringIndexOutOfBoundsException", StringIndexOutOfBoundsException.class, e.getClass());
-            latch.countDown();
-          }
+      new PromiseAction<Character>() {
+        @Override
+        public void call(Character value) {
+          fail("Promise not correctly calling failure handler when exception or rejection occurs");
         }
-      );
+      },
+      new PromiseAction<Exception>() {
+        @Override
+        public void call(Exception e) {
+          assertEquals("Exception is not StringIndexOutOfBoundsException", StringIndexOutOfBoundsException.class, e.getClass());
+          latch.countDown();
+        }
+      }
+    );
 
     latch.await(2l, TimeUnit.SECONDS);
   }
@@ -205,14 +195,14 @@ public class PromiseTestsJava {
           return result.charAt(20); // Exception
         }
       }).fail(
-        new PromiseAction<Exception>() {
-          @Override
-          public void call(Exception e) {
-            assertEquals("Exception is not StringIndexOutOfBoundsException", StringIndexOutOfBoundsException.class, e.getClass());
-            latch.countDown();
-          }
+      new PromiseAction<Exception>() {
+        @Override
+        public void call(Exception e) {
+          assertEquals("Exception is not StringIndexOutOfBoundsException", StringIndexOutOfBoundsException.class, e.getClass());
+          latch.countDown();
         }
-      );
+      }
+    );
 
     latch.await(2l, TimeUnit.SECONDS);
   }
@@ -237,14 +227,14 @@ public class PromiseTestsJava {
           }
         }
       ).fail(
-        new PromiseAction<Exception>() {
-          @Override
-          public void call(Exception e) {
-            assertTrue(e instanceof StringIndexOutOfBoundsException);
-            latch.countDown();
-          }
+      new PromiseAction<Exception>() {
+        @Override
+        public void call(Exception e) {
+          assertTrue(e instanceof StringIndexOutOfBoundsException);
+          latch.countDown();
         }
-      );
+      }
+    );
 
     latch.await(2l, TimeUnit.SECONDS);
   }
@@ -262,28 +252,28 @@ public class PromiseTestsJava {
           return result.charAt(20); // Exception
         }
       }).then(
-        new PromiseFunction<Character, String>() {
-          @Override
-          public String call(Character value) {
-            fail("Promise not correctly calling failure handler when exception or rejection occurs");
-            return "The Char is : " + value;
-          }
-        },
-        new PromiseFunction<Exception, String>() {
-          @Override
-          public String call(Exception value) {
-            flag.set(true);
-            return null;
-          }
-        }
-      ).then(new PromiseAction<String>() {
+      new PromiseFunction<Character, String>() {
         @Override
-        public void call(String value) {
-          assertNull(value);
-          assertTrue("FailureHandler was not called", flag.get());
-          latch.countDown();
+        public String call(Character value) {
+          fail("Promise not correctly calling failure handler when exception or rejection occurs");
+          return "The Char is : " + value;
         }
-      });
+      },
+      new PromiseFunction<Exception, String>() {
+        @Override
+        public String call(Exception value) {
+          flag.set(true);
+          return null;
+        }
+      }
+    ).then(new PromiseAction<String>() {
+      @Override
+      public void call(String value) {
+        assertNull(value);
+        assertTrue("FailureHandler was not called", flag.get());
+        latch.countDown();
+      }
+    });
 
     latch.await(2l, TimeUnit.SECONDS);
   }

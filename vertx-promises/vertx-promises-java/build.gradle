@@ -1,3 +1,3 @@
-dependencies { 
-  compile project(':rxjava-promises:rxjava-promises-core') 
+dependencies {
+  compile project(':rxjava-promises:rxjava-promises-core')
 }

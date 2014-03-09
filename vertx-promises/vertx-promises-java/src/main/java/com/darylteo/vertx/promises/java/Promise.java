@@ -1,19 +1,12 @@
 package com.darylteo.vertx.promises.java;
 
-import java.util.LinkedHashMap;
-
-import org.vertx.java.core.Handler;
-
-import rx.Observer;
-import rx.Subscription;
-import rx.util.functions.Function;
-
 import com.darylteo.rx.promises.AbstractPromise;
-import com.darylteo.vertx.promises.java.functions.FinallyAction;
-import com.darylteo.vertx.promises.java.functions.FinallyFunction;
-import com.darylteo.vertx.promises.java.functions.PromiseAction;
-import com.darylteo.vertx.promises.java.functions.PromiseFunction;
-import com.darylteo.vertx.promises.java.functions.RepromiseFunction;
+import com.darylteo.vertx.promises.java.functions.*;
+import org.vertx.java.core.Handler;
+import rx.Subscriber;
+import rx.functions.Function;
+
+import java.util.LinkedList;
 
 public class Promise<T> extends AbstractPromise<T> implements Handler<T> {
   public static <T> Promise<T> defer() {
@@ -21,7 +14,7 @@ public class Promise<T> extends AbstractPromise<T> implements Handler<T> {
   }
 
   public Promise() {
-    super(new LinkedHashMap<Subscription, Observer<? super T>>());
+    super(new LinkedList<Subscriber<? super T>>());
   }
 
   /* ================== */

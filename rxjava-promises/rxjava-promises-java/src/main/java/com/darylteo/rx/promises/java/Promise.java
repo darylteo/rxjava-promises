@@ -1,22 +1,15 @@
 package com.darylteo.rx.promises.java;
 
-import java.util.LinkedHashMap;
-
-import rx.Observer;
-import rx.Subscription;
-import rx.util.functions.Function;
-
 import com.darylteo.rx.promises.AbstractPromise;
-import com.darylteo.rx.promises.java.Promise;
-import com.darylteo.rx.promises.java.functions.FinallyAction;
-import com.darylteo.rx.promises.java.functions.FinallyFunction;
-import com.darylteo.rx.promises.java.functions.PromiseAction;
-import com.darylteo.rx.promises.java.functions.PromiseFunction;
-import com.darylteo.rx.promises.java.functions.RepromiseFunction;
+import com.darylteo.rx.promises.java.functions.*;
+import rx.Subscriber;
+import rx.functions.Function;
+
+import java.util.LinkedList;
 
 /**
  * A Promise represents a request that will be fulfilled sometime in the future, most usually by an asynchrous task executed on the Vert.x Event Loop. It allows you to assign handlers to deal with the return results of asynchronus tasks, and to flatten "pyramids of doom" or "callback hell".
- * 
+ * <p/>
  * <strong>Promise Rules</strong>
  * <ul>
  * <li>A Promise represents a value that is set in some future time (usually in another cycle of the event loop)</li>
@@ -29,7 +22,7 @@ import com.darylteo.rx.promises.java.functions.RepromiseFunction;
  * <li>If onFinally is provided, it is resolved first before either fulfilling or rejecting the next promise (see previous two points)
  * <li>Either onFulfilled, or onRejected may return a new promise (i.e. a repromise) . When this happens, the subsequently created promise will be fulfilled with the value of the repromise when it is eventually fulfilled.</li>
  * </ul>
- * 
+ * <p/>
  * <strong>Type-Safe Rules</strong>
  * <ul>
  * <li>All the type-safety rules are related to the output type of onFulfilled.</li>
@@ -39,11 +32,9 @@ import com.darylteo.rx.promises.java.functions.RepromiseFunction;
  * <li>If onFulfilled is not provided, it is assumed that it is defined in a future handler. As such, onRejected may not change the return type.</li>
  * <li>onFinally must be a Repromise or an Action. It does not accept any values. This is facilitated through the use of FinallyFunction and FinallyAction respectively.</li>
  * </ul>
- * 
+ *
+ * @param T - the data type of the result contained by this Promise.
  * @author Daryl Teo
- * 
- * @param T
- *          - the data type of the result contained by this Promise.
  */
 public class Promise<T> extends AbstractPromise<T> {
   public static <T> Promise<T> defer() {
@@ -51,7 +42,7 @@ public class Promise<T> extends AbstractPromise<T> {
   }
 
   public Promise() {
-    super(new LinkedHashMap<Subscription, Observer<? super T>>());
+    super(new LinkedList<Subscriber<? super T>>());
   }
 
   /* ================== */

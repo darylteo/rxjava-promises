@@ -1,5 +1,3 @@
-import groovy.xml.XmlUtil
-
 subprojects {
   apply plugin: 'vertx'
   apply from: rootProject.file('gradle/sonatype.gradle')
@@ -50,8 +48,8 @@ subprojects {
   artifacts { archives modZip }
 
   [
-    uploadArchives.repositories.mavenDeployer.pom,
-    install.repositories.mavenInstaller.pom
+          uploadArchives.repositories.mavenDeployer.pom,
+          install.repositories.mavenInstaller.pom
   ]*.withXml {
     asNode().children().addAll vertx.info
   }
