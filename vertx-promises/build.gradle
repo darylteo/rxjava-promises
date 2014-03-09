@@ -1,10 +1,12 @@
+import groovy.xml.XmlUtil
+
 subprojects {
   apply plugin: 'vertx'
   apply from: rootProject.file('gradle/sonatype.gradle')
 
   group = 'com.darylteo.vertx'
-  version = '1.1.0'
-  
+  version = '1.2.0'
+
   vertx {
     platform {
       version '2.0.2-final'
@@ -15,53 +17,42 @@ subprojects {
     }
 
     info {
+      name "RxJava Promises - Vertx Module - ${project.name}"
       description "Promises module for Vert.x - ${project.name}"
-      licenses 'The Apache Software License, Version 2.0'
-      author 'Daryl Teo'
+      inceptionYear '2013'
+      url 'http://github.com/darylteo/rxjava-promises'
 
-      keywords 'promise,promises,handler,future,continuation,callback,async'
-      homepage 'https://github.com/darylteo/rxjava-promises'
-    }
-  }
-
-  artifacts {
-    archives modZip
-  }
-
-  uploadArchives {
-    repositories {
-      mavenDeployer {
-        pom {
-          project {
-            name "RxJava Promises - Vertx Module - ${project.name}"
-            description "Promises module for Vert.x - ${project.name}"
-            inceptionYear '2013'
-            url 'http://github.com/darylteo/rxjava-promises'
-
-            developers {
-              developer {
-                id 'darylteo'
-                name 'Daryl Teo'
-                email 'i.am@darylteo.com'
-              }
-            }
-
-            scm { url 'http://github.com/darylteo/rxjava-promises' }
-
-            licenses {
-              license {
-                name 'The Apache Software License, Version 2.0'
-                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                distribution 'repo'
-              }
-            }
-
-            properties { 
-              'project.build.sourceEncoding'('UTF8')
-            }
-          }
+      licenses {
+        license {
+          name 'The Apache Software License, Version 2.0'
+          url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+          distribution 'repo'
         }
       }
+
+      developers {
+        developer {
+          id 'darylteo'
+          name 'Daryl Teo'
+          email 'i.am@darylteo.com'
+        }
+      }
+
+      scm { url 'http://github.com/darylteo/rxjava-promises' }
+
+      properties {
+        keywords 'promise,promises,handler,future,continuation,callback,async'
+        'project.build.sourceEncoding' 'UTF8'
+      }
     }
+  }
+
+  artifacts { archives modZip }
+
+  [
+    uploadArchives.repositories.mavenDeployer.pom,
+    install.repositories.mavenInstaller.pom
+  ]*.withXml {
+    asNode().children().addAll vertx.info
   }
 }
