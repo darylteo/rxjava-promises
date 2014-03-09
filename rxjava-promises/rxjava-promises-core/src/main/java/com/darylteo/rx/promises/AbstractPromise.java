@@ -4,10 +4,7 @@ import rx.Observable;
 import rx.Observer;
 import rx.Subscriber;
 import rx.functions.*;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import rx.subjects.ReplaySubject;
 
 public abstract class AbstractPromise<T> extends Observable<T> implements Observer<T> {
   public static enum STATE {
@@ -19,7 +16,8 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
   /* Properties */
   private AbstractPromise<T> that = this;
 
-  private LinkedList<Subscriber<? super T>> observers;
+  private ReplaySubject<T> subject;
+
   private STATE state = STATE.PENDING;
   private T value = null;
   private Throwable reason;
@@ -49,15 +47,15 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
   }
 
   /* Constructor */
-  public AbstractPromise(final LinkedList<Subscriber<? super T>> observers) {
+  public AbstractPromise(final ReplaySubject<T> subject) {
     super(new OnSubscribe<T>() {
       @Override
       public void call(Subscriber<? super T> subscriber) {
-        observers.add(subscriber);
+        subject.subscribe((Observer<T>) subscriber);
       }
     });
 
-    this.observers = observers;
+    this.subject = subject;
   }
 
   /* ================== */
@@ -238,13 +236,12 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
     this.state = STATE.FULFILLED;
     this.value = value;
 
-    // A copy of the observers is taken first, in case more observers are added
-    // after.
-    List<Observer<? super T>> observerList = new ArrayList<Observer<? super T>>(this.observers);
-    for (Observer<? super T> obs : observerList) {
-      obs.onNext(this.value);
-      obs.onCompleted();
-    }
+    this.subject.onNext(value);
+    this.subject.onCompleted();
+  }
+
+  public void reject(Object reason) {
+    this.reject(new Exception(reason.toString()));
   }
 
   public void reject(Throwable reason) {
@@ -255,22 +252,7 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
     this.state = STATE.REJECTED;
     this.reason = reason;
 
-    // A copy of the observers is taken first, in case more observers are added
-    // after.
-    List<Observer<? super T>> observerList = new ArrayList<Observer<? super T>>(this.observers);
-
-    if (observerList.isEmpty()) {
-      System.err.println("Warning: Promise was rejected but no rejection function was provided");
-      reason.printStackTrace();
-    }
-
-    for (Observer<? super T> obs : observerList) {
-      obs.onError(this.reason);
-    }
-  }
-
-  public void reject(Object reason) {
-    this.reject(new Exception(reason.toString()));
+    this.subject.onError(reason);
   }
 
   public void become(AbstractPromise<T> other) {
