@@ -2,10 +2,8 @@ package com.darylteo.rx.promises.java;
 
 import com.darylteo.rx.promises.AbstractPromise;
 import com.darylteo.rx.promises.java.functions.*;
-import rx.Subscriber;
 import rx.functions.Function;
-
-import java.util.LinkedList;
+import rx.subjects.ReplaySubject;
 
 /**
  * A Promise represents a request that will be fulfilled sometime in the future, most usually by an asynchrous task executed on the Vert.x Event Loop. It allows you to assign handlers to deal with the return results of asynchronus tasks, and to flatten "pyramids of doom" or "callback hell".
@@ -42,7 +40,7 @@ public class Promise<T> extends AbstractPromise<T> {
   }
 
   public Promise() {
-    super(new LinkedList<Subscriber<? super T>>());
+    super(ReplaySubject.<T>create());
   }
 
   /* ================== */

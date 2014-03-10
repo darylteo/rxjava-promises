@@ -3,10 +3,8 @@ package com.darylteo.vertx.promises.java;
 import com.darylteo.rx.promises.AbstractPromise;
 import com.darylteo.vertx.promises.java.functions.*;
 import org.vertx.java.core.Handler;
-import rx.Subscriber;
 import rx.functions.Function;
-
-import java.util.LinkedList;
+import rx.subjects.ReplaySubject;
 
 public class Promise<T> extends AbstractPromise<T> implements Handler<T> {
   public static <T> Promise<T> defer() {
@@ -14,7 +12,7 @@ public class Promise<T> extends AbstractPromise<T> implements Handler<T> {
   }
 
   public Promise() {
-    super(new LinkedList<Subscriber<? super T>>());
+    super(ReplaySubject.<T>create());
   }
 
   /* ================== */
