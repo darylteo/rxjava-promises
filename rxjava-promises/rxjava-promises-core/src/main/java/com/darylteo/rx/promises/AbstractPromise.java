@@ -1,12 +1,11 @@
 package com.darylteo.rx.promises;
 
+import com.darylteo.rx.promises.functions.*;
 import rx.Observable;
 import rx.Observer;
-import rx.Subscriber;
-import rx.functions.*;
 import rx.subjects.ReplaySubject;
 
-public abstract class AbstractPromise<T> extends Observable<T> implements Observer<T> {
+public abstract class AbstractPromise<T> implements Observer<T> {
   public static enum STATE {
     PENDING,
     FULFILLED,
@@ -17,6 +16,7 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
   private AbstractPromise<T> that = this;
 
   private ReplaySubject<T> subject;
+  private Observable<T> obs;
 
   private STATE state = STATE.PENDING;
   private T value = null;
@@ -47,15 +47,11 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
   }
 
   /* Constructor */
-  public AbstractPromise(final ReplaySubject<T> subject) {
-    super(new OnSubscribe<T>() {
-      @Override
-      public void call(Subscriber<? super T> subscriber) {
-        subject.subscribe((Observer<T>) subscriber);
-      }
-    });
+  public AbstractPromise() {
+    this.subject = ReplaySubject.create();
 
-    this.subject = subject;
+    // toObservable() should only return the last accepted value before it was completed.
+    this.obs = this.subject.last();
   }
 
   /* ================== */
@@ -213,7 +209,7 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
       }
     };
 
-    this.subscribe(observer);
+    this.subject.subscribe(observer);
 
     // Immediately notify observer if result of this promise has already been
     // determined
@@ -256,10 +252,10 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
   }
 
   public void become(AbstractPromise<T> other) {
-    other.subscribe(this);
+    other.subject.subscribe(this);
   }
 
-  /* Observable Methods */
+  /* Observer Implemented Methods */
   @Override
   public void onCompleted() {
     this.fulfill(this.value);
@@ -273,6 +269,11 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
   @Override
   public void onNext(T value) {
     this.value = value;
+  }
+
+  /* Observable Adaptor */
+  public Observable<T> toObservable() {
+    return this.obs;
   }
 
   /* Private Methods */

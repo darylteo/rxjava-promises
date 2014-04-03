@@ -1,9 +1,8 @@
 package com.darylteo.rx.promises.java;
 
 import com.darylteo.rx.promises.AbstractPromise;
+import com.darylteo.rx.promises.functions.Function;
 import com.darylteo.rx.promises.java.functions.*;
-import rx.functions.Function;
-import rx.subjects.ReplaySubject;
 
 /**
  * A Promise represents a request that will be fulfilled sometime in the future, most usually by an asynchrous task executed on the Vert.x Event Loop. It allows you to assign handlers to deal with the return results of asynchronus tasks, and to flatten "pyramids of doom" or "callback hell".
@@ -40,7 +39,6 @@ public class Promise<T> extends AbstractPromise<T> {
   }
 
   public Promise() {
-    super(ReplaySubject.<T>create());
   }
 
   /* ================== */
@@ -60,37 +58,37 @@ public class Promise<T> extends AbstractPromise<T> {
 
   // then(onFulfilled, onRejected)
   public <O> Promise<O> then(PromiseFunction<T, O> onFulfilled,
-    PromiseFunction<Exception, O> onRejected) {
+                             PromiseFunction<Exception, O> onRejected) {
     return this.promise(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(PromiseFunction<T, O> onFulfilled,
-    RepromiseFunction<Exception, O> onRejected) {
+                             RepromiseFunction<Exception, O> onRejected) {
     return this.promise(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(PromiseFunction<T, O> onFulfilled,
-    PromiseAction<Exception> onRejected) {
+                             PromiseAction<Exception> onRejected) {
     return this.promise(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(RepromiseFunction<T, O> onFulfilled,
-    PromiseFunction<Exception, O> onRejected) {
+                             PromiseFunction<Exception, O> onRejected) {
     return this.promise(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(RepromiseFunction<T, O> onFulfilled,
-    RepromiseFunction<Exception, O> onRejected) {
+                             RepromiseFunction<Exception, O> onRejected) {
     return this.promise(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(RepromiseFunction<T, O> onFulfilled,
-    PromiseAction<Exception> onRejected) {
+                             PromiseAction<Exception> onRejected) {
     return this.promise(onFulfilled, onRejected, null);
   }
 
   public Promise<Void> then(PromiseAction<T> onFulfilled,
-    PromiseAction<Exception> onRejected) {
+                            PromiseAction<Exception> onRejected) {
     return this.promise(onFulfilled, onRejected, null);
   }
 
