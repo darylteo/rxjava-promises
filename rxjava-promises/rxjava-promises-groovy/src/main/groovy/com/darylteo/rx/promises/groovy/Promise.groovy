@@ -1,9 +1,8 @@
 package com.darylteo.rx.promises.groovy
 
 import com.darylteo.rx.promises.AbstractPromise
-import rx.Subscriber
-import rx.functions.Action0
-import rx.functions.Func1
+import com.darylteo.rx.promises.functions.Action0
+import com.darylteo.rx.promises.functions.Func1
 
 public class Promise<T> extends AbstractPromise<T> {
   public static <T> Promise<T> defer() {
@@ -11,7 +10,6 @@ public class Promise<T> extends AbstractPromise<T> {
   }
 
   public Promise() {
-    super(new LinkedList<Subscriber<? super T>>());
   }
 
   public <O> Promise<O> then(Map m = [:]) {
@@ -31,6 +29,6 @@ public class Promise<T> extends AbstractPromise<T> {
   }
 
   private <O> Promise<O> promise(Closure<O> onFulfilled, Closure<O> onRejected, Closure<O> onFinally) {
-    return (Promise<O>) super._then(onFulfilled as Func1<T, O>, onRejected as Func1<T, O>, onFinally as Action0<?>)
+    return (Promise<O>) super._then(onFulfilled as Func1<T, O>, onRejected as Func1<T, O>, onFinally as Action0)
   }
 }

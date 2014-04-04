@@ -2,6 +2,7 @@ package com.darylteo.rx.promises.test;
 
 import com.darylteo.rx.promises.java.Promise;
 import org.junit.Test;
+import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
@@ -53,6 +54,34 @@ public class PromiseRxJavaTests {
 
     latch.await();
     assertEquals("HELLO WORLD", result.value);
+  }
+
+  @Test
+  public void testPromiseSubscribeToObservable() throws InterruptedException {
+    final CountDownLatch latch = new CountDownLatch(1);
+    final Result<String> result = new Result<String>();
+
+    Observable<String> observable = Observable.from(new String[]{
+      "This",
+      "Is",
+      "An",
+      "Ex",
+      "Parrot"
+    });
+
+    Promise<String> promise = new Promise();
+    observable.subscribe(promise);
+
+    promise.toObservable().single().subscribe(new Action1<String>() {
+      @Override
+      public void call(String value) {
+        result.value = value;
+        latch.countDown();
+      }
+    });
+
+    latch.await();
+    assertEquals("Parrot", result.value);
   }
 
   public Promise<String> makePromise(final String value) {

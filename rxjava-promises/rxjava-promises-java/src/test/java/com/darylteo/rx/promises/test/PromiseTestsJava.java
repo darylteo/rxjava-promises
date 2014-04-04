@@ -3,6 +3,7 @@ package com.darylteo.rx.promises.test;
 import com.darylteo.rx.promises.java.Promise;
 import com.darylteo.rx.promises.java.functions.*;
 import org.junit.Test;
+import rx.Observable;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
