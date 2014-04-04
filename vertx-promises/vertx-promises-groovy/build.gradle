@@ -8,4 +8,5 @@ vertx {
 
 dependencies {
   compile project(':rxjava-promises:rxjava-promises-core')
+  provided 'org.codehaus.groovy:groovy-all:2.1.5'
 }
