@@ -13,7 +13,7 @@ import static org.junit.Assert.*
 class PromisesTestGroovy {
   @Test
   public void testStates() {
-    def promise = Promise.defer()
+    def promise = new Promise()
     assertTrue(promise.pending)
     promise.fulfill('Hello')
     assertTrue(promise.fulfilled)
@@ -26,7 +26,7 @@ class PromisesTestGroovy {
     assertTrue(promise.fulfilled)
     assertEquals('Hello', promise.value)
 
-    promise = Promise.defer()
+    promise = new Promise()
     assertTrue(promise.pending)
     promise.reject('Foo')
     assertTrue(promise.rejected)

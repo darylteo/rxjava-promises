@@ -34,10 +34,6 @@ import com.darylteo.rx.promises.java.functions.*;
  * @author Daryl Teo
  */
 public class Promise<T> extends AbstractPromise<T> {
-  public static <T> Promise<T> defer() {
-    return new Promise<T>();
-  }
-
   public Promise() {
   }
 

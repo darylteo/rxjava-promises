@@ -85,7 +85,7 @@ public class PromiseRxJavaTests {
   }
 
   public Promise<String> makePromise(final String value) {
-    final Promise<String> promise = Promise.defer();
+    final Promise<String> promise = new Promise();
 
     new Thread() {
       public void run() {

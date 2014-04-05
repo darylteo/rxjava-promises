@@ -5,10 +5,6 @@ import com.darylteo.rx.promises.functions.Action0
 import com.darylteo.rx.promises.functions.Func1
 
 public class Promise<T> extends AbstractPromise<T> {
-  public static <T> Promise<T> defer() {
-    return new Promise<T>();
-  }
-
   public Promise() {
   }
 
