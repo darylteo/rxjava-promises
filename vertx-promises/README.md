@@ -3,7 +3,7 @@
 ### Maven
 ```XML
 <dependency>
-  <groupId>com.darylteo</groupId>
+  <groupId>com.darylteo.vertx</groupId>
   <artifactId>vertx-promises-{lang}</artifactId>
   <version>1.1.0</version>
 </dependency>
