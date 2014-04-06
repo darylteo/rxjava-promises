@@ -22,7 +22,7 @@ The main addition to the Vertx version of RxJava-Promises is its ability to be u
 
 ```java
 private Promise<Buffer> readAFile(String filename) {
-  final Promise<Buffer> p = Promise.defer();
+  final Promise<Buffer> p = new Promise();
 
   vertx.fileSystem().readFile(filname, new Handler<AsyncResult<Buffer>>() {
     @Override

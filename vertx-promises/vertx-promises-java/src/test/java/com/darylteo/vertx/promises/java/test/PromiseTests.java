@@ -14,7 +14,7 @@ import static org.vertx.testtools.VertxAssert.testComplete;
 public class PromiseTests extends TestVerticle {
   @Test
   public void testHandler() {
-    Promise<Long> promise = Promise.defer();
+    Promise<Long> promise = new Promise();
     vertx.setTimer(1000l, promise);
 
     promise.then(new PromiseFunction<Long, String>() {
@@ -25,7 +25,7 @@ public class PromiseTests extends TestVerticle {
     }).then(new RepromiseFunction<String, String>() {
       @Override
       public Promise<String> call(final String t1) {
-        final Promise<String> p = Promise.defer();
+        final Promise<String> p = new Promise();
         vertx.setTimer(1000l, new Handler<Long>() {
           @Override
           public void handle(Long event) {

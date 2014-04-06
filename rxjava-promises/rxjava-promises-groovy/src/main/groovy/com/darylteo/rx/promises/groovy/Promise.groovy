@@ -1,17 +1,12 @@
 package com.darylteo.rx.promises.groovy
 
 import com.darylteo.rx.promises.AbstractPromise
-import rx.Subscriber
 import rx.functions.Action0
 import rx.functions.Func1
 
 public class Promise<T> extends AbstractPromise<T> {
-  public static <T> Promise<T> defer() {
-    return new Promise<T>();
-  }
-
   public Promise() {
-    super(new LinkedList<Subscriber<? super T>>());
+    super();
   }
 
   public <O> Promise<O> then(Map m = [:]) {

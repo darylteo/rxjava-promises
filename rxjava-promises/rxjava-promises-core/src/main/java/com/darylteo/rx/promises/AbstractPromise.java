@@ -2,11 +2,10 @@ package com.darylteo.rx.promises;
 
 import rx.Observable;
 import rx.Observer;
-import rx.Subscriber;
 import rx.functions.*;
 import rx.subjects.ReplaySubject;
 
-public abstract class AbstractPromise<T> extends Observable<T> implements Observer<T> {
+public abstract class AbstractPromise<T> implements Observer<T> {
   public static enum STATE {
     PENDING,
     FULFILLED,
@@ -17,6 +16,7 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
   private AbstractPromise<T> that = this;
 
   private ReplaySubject<T> subject;
+  private Observable<T> obs;
 
   private STATE state = STATE.PENDING;
   private T value = null;
@@ -47,15 +47,36 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
   }
 
   /* Constructor */
-  public AbstractPromise(final ReplaySubject<T> subject) {
-    super(new OnSubscribe<T>() {
+  public AbstractPromise() {
+    this(null);
+  }
+
+  public AbstractPromise(Observable<T> source) {
+    this.subject = ReplaySubject.create();
+    this.obs = this.subject.last();
+
+    if (source != null) {
+      source.subscribe(this.subject);
+    }
+
+    // promise states
+    this.obs.subscribe(new Observer<T>() {
       @Override
-      public void call(Subscriber<? super T> subscriber) {
-        subject.subscribe((Observer<T>) subscriber);
+      public void onCompleted() {
+        that.state = STATE.FULFILLED;
+      }
+
+      @Override
+      public void onError(Throwable reason) {
+        that.state = STATE.REJECTED;
+        that.reason = reason;
+      }
+
+      @Override
+      public void onNext(T value) {
+        that.value = value;
       }
     });
-
-    this.subject = subject;
   }
 
   /* ================== */
@@ -78,18 +99,20 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
 
       @Override
       public void onError(Throwable reason) {
-        that.reason = reason;
         this.evaluate();
       }
 
       @Override
       public void onNext(T value) {
-        that.value = value;
+
       }
 
       private void evaluate() {
         try {
           // onfinally and onFulfilled/onRejected are mutually exclusive
+          // note: this implementation of finally is closer to "onComplete" rather than "finallyDo"
+          // in that it fires immediately when the previous Promise is fulfilled, rather than
+          // for the entire sequence of Observables to complete its sequence.
           if (onFinally != null) {
             evaluateFinally();
             return;
@@ -213,50 +236,27 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
       }
     };
 
-    this.subscribe(observer);
-
-    // Immediately notify observer if result of this promise has already been
-    // determined
-    if (this.state == STATE.FULFILLED) {
-      observer.onNext(this.value);
-      observer.onCompleted();
-    } else if (this.state == STATE.REJECTED) {
-      observer.onError(this.reason);
-    }
+    this.obs.subscribe(observer);
 
     return deferred;
   }
 
   /* Result Methods */
   public void fulfill(T value) {
-    if (!this.isPending()) {
-      return;
-    }
-
-    this.state = STATE.FULFILLED;
-    this.value = value;
-
     this.subject.onNext(value);
     this.subject.onCompleted();
   }
 
   public void reject(Object reason) {
-    this.reject(new Exception(reason.toString()));
+    this.subject.onError(new Exception(reason.toString()));
   }
 
   public void reject(Throwable reason) {
-    if (!this.isPending()) {
-      return;
-    }
-
-    this.state = STATE.REJECTED;
-    this.reason = reason;
-
     this.subject.onError(reason);
   }
 
   public void become(AbstractPromise<T> other) {
-    other.subscribe(this);
+    other.subject.subscribe(this);
   }
 
   /* Observable Methods */
@@ -273,6 +273,11 @@ public abstract class AbstractPromise<T> extends Observable<T> implements Observ
   @Override
   public void onNext(T value) {
     this.value = value;
+  }
+
+  /* rx adapter */
+  public Observable<T> toObservable() {
+    return this.obs;
   }
 
   /* Private Methods */

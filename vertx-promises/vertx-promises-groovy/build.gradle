@@ -2,10 +2,12 @@ apply plugin: 'groovy'
 
 vertx {
   platform {
-    groovy '2.0.0-final'
+    version '2.1RC3'
+    lang 'groovy'
   }
 }
 
 dependencies {
   compile project(':rxjava-promises:rxjava-promises-core')
+  provided 'org.codehaus.groovy:groovy-all:2.2.1'
 }

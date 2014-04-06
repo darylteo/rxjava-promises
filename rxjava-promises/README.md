@@ -17,7 +17,7 @@
 Either use the constructor or the defer() static method
 
 ```java
-Promise<String> p1 = Promise.defer();
+Promise<String> p1 = new Promise();
 Promise<String> p2 = new Promise<>();
 ````
 
@@ -42,7 +42,7 @@ p1.then(new PromiseFunction<String, String>() {
 p1.then(new RepromiseFunction<String, String>() {
   public Promise<String> call(String value) {
     // do something with String value and return another Promise for a String
-    Promise<String> result = Promise.defer():
+    Promise<String> result = new Promise():
     ...
     return result;
   }

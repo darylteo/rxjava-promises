@@ -35,12 +35,8 @@ import rx.subjects.ReplaySubject;
  * @author Daryl Teo
  */
 public class Promise<T> extends AbstractPromise<T> {
-  public static <T> Promise<T> defer() {
-    return new Promise<T>();
-  }
-
   public Promise() {
-    super(ReplaySubject.<T>create());
+    super();
   }
 
   /* ================== */

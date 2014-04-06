@@ -14,7 +14,7 @@ public class PromiseTestsJava {
 
   @Test
   public void testDefer() throws Exception {
-    Promise<String> promise = Promise.defer();
+    Promise<String> promise = new Promise();
 
     assertNotNull(promise);
     assertTrue(promise instanceof Promise);
@@ -427,7 +427,7 @@ public class PromiseTestsJava {
       .fin(new FinallyFunction<Void>() {
         @Override
         public Promise<Void> call() {
-          final Promise<Void> promise = Promise.defer();
+          final Promise<Void> promise = new Promise();
 
           makePromise("Foo Bar").then(new PromiseAction<String>() {
             @Override
@@ -475,7 +475,7 @@ public class PromiseTestsJava {
       .fin(new FinallyFunction<String>() {
         @Override
         public Promise<String> call() {
-          final Promise<String> promise = Promise.defer();
+          final Promise<String> promise = new Promise();
 
           makePromise("Foo Bar").then(new PromiseAction<String>() {
             @Override
@@ -540,7 +540,7 @@ public class PromiseTestsJava {
 
   @Test
   public void testPrefilled() throws Exception {
-    Promise<String> p = Promise.defer();
+    Promise<String> p = new Promise();
 
     p.fulfill("Hello World");
 
@@ -553,7 +553,7 @@ public class PromiseTestsJava {
   }
 
   public Promise<String> makePromise(final String value) {
-    final Promise<String> promise = Promise.defer();
+    final Promise<String> promise = new Promise();
 
     new Thread() {
       public void run() {

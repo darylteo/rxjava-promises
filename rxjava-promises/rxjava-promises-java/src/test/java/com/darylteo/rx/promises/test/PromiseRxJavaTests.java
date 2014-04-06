@@ -17,6 +17,7 @@ public class PromiseRxJavaTests {
     final Result<String> result = new Result<String>();
 
     makePromise("Hello World")
+      .toObservable()
       .subscribe(new Action1<String>() {
         @Override
         public void call(String value) {
@@ -35,6 +36,7 @@ public class PromiseRxJavaTests {
     final Result<String> result = new Result<String>();
 
     makePromise("Hello World")
+      .toObservable()
       .map(new Func1<String, String>() {
         @Override
         public String call(String value) {
@@ -54,7 +56,7 @@ public class PromiseRxJavaTests {
   }
 
   public Promise<String> makePromise(final String value) {
-    final Promise<String> promise = Promise.defer();
+    final Promise<String> promise = new Promise();
 
     new Thread() {
       public void run() {
