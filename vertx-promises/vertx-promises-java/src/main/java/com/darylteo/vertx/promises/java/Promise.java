@@ -3,16 +3,16 @@ package com.darylteo.vertx.promises.java;
 import com.darylteo.rx.promises.AbstractPromise;
 import com.darylteo.vertx.promises.java.functions.*;
 import org.vertx.java.core.Handler;
+import rx.Observable;
 import rx.functions.Function;
-import rx.subjects.ReplaySubject;
 
 public class Promise<T> extends AbstractPromise<T> implements Handler<T> {
-  public static <T> Promise<T> defer() {
-    return new Promise<T>();
+  public Promise() {
+    super();
   }
 
-  public Promise() {
-    super(ReplaySubject.<T>create());
+  public Promise(Observable<T> source) {
+    super(source);
   }
 
   /* ================== */
@@ -32,37 +32,37 @@ public class Promise<T> extends AbstractPromise<T> implements Handler<T> {
 
   // then(onFulfilled, onRejected)
   public <O> Promise<O> then(PromiseFunction<T, O> onFulfilled,
-    PromiseFunction<Exception, O> onRejected) {
+                             PromiseFunction<Exception, O> onRejected) {
     return this.promise(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(PromiseFunction<T, O> onFulfilled,
-    RepromiseFunction<Exception, O> onRejected) {
+                             RepromiseFunction<Exception, O> onRejected) {
     return this.promise(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(PromiseFunction<T, O> onFulfilled,
-    PromiseAction<Exception> onRejected) {
+                             PromiseAction<Exception> onRejected) {
     return this.promise(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(RepromiseFunction<T, O> onFulfilled,
-    PromiseFunction<Exception, O> onRejected) {
+                             PromiseFunction<Exception, O> onRejected) {
     return this.promise(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(RepromiseFunction<T, O> onFulfilled,
-    RepromiseFunction<Exception, O> onRejected) {
+                             RepromiseFunction<Exception, O> onRejected) {
     return this.promise(onFulfilled, onRejected, null);
   }
 
   public <O> Promise<O> then(RepromiseFunction<T, O> onFulfilled,
-    PromiseAction<Exception> onRejected) {
+                             PromiseAction<Exception> onRejected) {
     return this.promise(onFulfilled, onRejected, null);
   }
 
   public Promise<Void> then(PromiseAction<T> onFulfilled,
-    PromiseAction<Exception> onRejected) {
+                            PromiseAction<Exception> onRejected) {
     return this.promise(onFulfilled, onRejected, null);
   }
 

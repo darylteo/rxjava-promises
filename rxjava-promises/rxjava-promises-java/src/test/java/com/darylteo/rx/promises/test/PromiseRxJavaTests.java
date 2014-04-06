@@ -1,11 +1,14 @@
 package com.darylteo.rx.promises.test;
 
 import com.darylteo.rx.promises.java.Promise;
+import com.darylteo.rx.promises.java.functions.PromiseAction;
 import org.junit.Test;
+import rx.Observable;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
@@ -53,6 +56,29 @@ public class PromiseRxJavaTests {
 
     latch.await();
     assertEquals("HELLO WORLD", result.value);
+  }
+
+  @Test
+  public void testPromiseFromObservable() throws InterruptedException {
+    final CountDownLatch latch = new CountDownLatch(1);
+    final Result<String> result = new Result<String>();
+
+    Observable<String> obs = Observable.from(new String[]{
+      "Hello",
+      "World"
+    });
+
+    new Promise(obs)
+      .then(new PromiseAction<String>() {
+        @Override
+        public void call(String message) {
+          result.value = "World";
+          latch.countDown();
+        }
+      });
+
+    latch.await(2l, TimeUnit.SECONDS);
+    assertEquals("World", result.value);
   }
 
   public Promise<String> makePromise(final String value) {

@@ -2,18 +2,18 @@ package com.darylteo.vertx.promises.groovy
 
 import com.darylteo.rx.promises.AbstractPromise
 import org.vertx.java.core.Handler
-import rx.Subscription
 import rx.functions.Action0
 import rx.functions.Func1
 
 public class Promise<T> extends AbstractPromise<T> implements Handler<T> {
-  public static <T> Promise<T> defer() {
-    return new Promise<T>();
+  public Promise() {
+    super();
   }
 
-  public Promise() {
-    super(new LinkedHashMap<Subscription, Observer<? super T>>());
+  public Promise(rx.Observable<T> source) {
+    super(source);
   }
+
 
   public <O> Promise<O> then(Map m = [:]) {
     return this.promise(m.onFulfilled, m.onRejected, null)

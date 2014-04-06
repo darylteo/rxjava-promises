@@ -9,6 +9,10 @@ public class Promise<T> extends AbstractPromise<T> {
     super();
   }
 
+  public Promise(rx.Observable<T> source) {
+    super(source);
+  }
+
   public <O> Promise<O> then(Map m = [:]) {
     return this.promise(m.onFulfilled, m.onRejected, null)
   }

@@ -2,6 +2,7 @@ package com.darylteo.rx.promises.java;
 
 import com.darylteo.rx.promises.AbstractPromise;
 import com.darylteo.rx.promises.java.functions.*;
+import rx.Observable;
 import rx.functions.Function;
 import rx.subjects.ReplaySubject;
 
@@ -36,7 +37,10 @@ import rx.subjects.ReplaySubject;
  */
 public class Promise<T> extends AbstractPromise<T> {
   public Promise() {
-    super();
+  }
+
+  public Promise(Observable<T> source) {
+    super(source);
   }
 
   /* ================== */
