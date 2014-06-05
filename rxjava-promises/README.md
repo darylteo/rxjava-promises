@@ -10,6 +10,11 @@
 </dependency>
 ````
 
+## Gradle
+
+    compile 'com.darylteo:rxjava-promises-java:1.1.2'
+
+
 ## Documentation
 
 ### Creating a Promise
