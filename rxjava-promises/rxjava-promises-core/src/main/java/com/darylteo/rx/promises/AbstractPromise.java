@@ -1,8 +1,18 @@
 package com.darylteo.rx.promises;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import rx.Observable;
 import rx.Observer;
-import rx.functions.*;
+import rx.functions.Action0;
+import rx.functions.Action1;
+import rx.functions.Func0;
+import rx.functions.Func1;
+import rx.functions.Function;
+import rx.observers.EmptyObserver;
 import rx.subjects.ReplaySubject;
 
 public abstract class AbstractPromise<T> implements Observer<T> {
@@ -279,8 +289,82 @@ public abstract class AbstractPromise<T> implements Observer<T> {
   public Observable<T> toObservable() {
     return this.obs;
   }
+  
+  @SuppressWarnings({ "rawtypes" })
+  protected static AbstractPromise<List> _all(Class promiseClass, final AbstractPromise... promises) {
+    AbstractPromise<List> result = _create(promiseClass);
+    return __all(result, promises);
+  }
+  
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  protected static AbstractPromise<List> _all(Class promiseClass, final long timeout, final AbstractPromise... promises) {
+    AbstractPromise<List> tmpResult = _create(promiseClass);
+    
+    final AbstractPromise<List> result = __all(tmpResult, promises);
+    
+    result.toObservable().timeout(timeout, TimeUnit.MILLISECONDS).subscribe(new EmptyObserver() {
+      @Override
+      public void onError(Throwable e) {
+        Throwable reason = e;
+        if(e instanceof TimeoutException)
+          reason = new TimeoutException("Terminated with timeout of " + timeout + " ms.");
+        
+        result.reject(reason);
+      }
+    });
+    
+    return result;
+  }
+  
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  private static AbstractPromise<List> __all(final AbstractPromise<List> result,
+        final AbstractPromise... promises) {
+      final List allResults = new ArrayList();
+      final List allExceptions = new ArrayList();
+
+      for (AbstractPromise promise : promises) {
+        promise._then(
+        //onFulfilled
+        new Func1() {
+          public Object call(Object obj) {
+            allResults.add(obj);
+            if (allResults.size() == promises.length) {
+              if(allExceptions.isEmpty())
+                result.fulfill(allResults);
+              else
+                result.reject(allResults);
+            }
+            return null;
+          }
+        }, 
+        //onRejected
+        new Func1() {
+          public Object call(Object ex) {
+            allResults.add(ex);
+            allExceptions.add(ex);
+            if (allResults.size() == promises.length)
+              result.reject(allResults);
+            
+            return null;
+          }
+        },
+        //finally
+        null);
+      }
+
+    return result;
+  }
 
   /* Private Methods */
+  @SuppressWarnings("unchecked")
+  private static <O> AbstractPromise<O> _create(Class cl) {
+    try {
+      return (AbstractPromise<O>) cl.newInstance();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+  
   @SuppressWarnings("unchecked")
   private <O> AbstractPromise<O> _create() {
     try {
