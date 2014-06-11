@@ -1,12 +1,13 @@
 package com.darylteo.rx.promises.groovy.tests
 
-import com.darylteo.rx.promises.groovy.Promise
-import org.junit.Test
+import static org.junit.Assert.*
 
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-import static org.junit.Assert.*
+import org.junit.Test
+
+import com.darylteo.rx.promises.groovy.Promise
 
 /* http://promises-aplus.github.io/promises-spec/ */
 
@@ -114,6 +115,57 @@ class PromisesTestGroovy {
     assertTrue invalids.empty
     assertEquals 0, latch.count
   }
+  
+  @Test
+  public void testPromiseAll() throws InterruptedException {
+    final CountDownLatch latch = new CountDownLatch(1);
+
+    Promise p1 = new Promise();
+    Promise p2 = new Promise();
+
+    def result;
+    println "start : " + result
+
+    Promise.all(p1, p2).then { l ->
+        result = 0;
+        println "all done : " + result
+        l.each {
+          result += (Integer) it;
+          println "result : " + result
+        }
+      };
+
+    p1.fulfill(2);
+    p2.fulfill(3);
+
+    latch.await(2, TimeUnit.SECONDS);
+    assertEquals(result, 5);
+  }
+
+  @Test
+  public void testPromiseAllReject() throws InterruptedException {
+    final CountDownLatch latch = new CountDownLatch(1);
+
+    Promise p1 = new Promise();
+    Promise p2 = new Promise();
+    
+    def result;
+
+    Promise.all(p1, p2).then( { List l ->
+      // not used for this test
+    }, { Exception e ->
+      result = e;
+    });
+
+    p1.fulfill(2);
+    String reason = "Reject Reason";
+    p2.reject(reason);
+
+    latch.await(2, TimeUnit.SECONDS);
+    assertTrue(result instanceof Exception);
+    assertTrue(((Exception) result).getMessage().contains(reason));
+  }
+
 
 
   private Promise<String> makePromise(String message) {
@@ -137,4 +189,6 @@ class PromisesTestGroovy {
 
     return p
   }
+  
+  
 }

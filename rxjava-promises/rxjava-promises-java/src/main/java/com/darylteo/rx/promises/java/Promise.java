@@ -1,10 +1,16 @@
 package com.darylteo.rx.promises.java;
 
-import com.darylteo.rx.promises.AbstractPromise;
-import com.darylteo.rx.promises.java.functions.*;
+import java.util.List;
+
 import rx.Observable;
 import rx.functions.Function;
-import rx.subjects.ReplaySubject;
+
+import com.darylteo.rx.promises.AbstractPromise;
+import com.darylteo.rx.promises.java.functions.FinallyAction;
+import com.darylteo.rx.promises.java.functions.FinallyFunction;
+import com.darylteo.rx.promises.java.functions.PromiseAction;
+import com.darylteo.rx.promises.java.functions.PromiseFunction;
+import com.darylteo.rx.promises.java.functions.RepromiseFunction;
 
 /**
  * A Promise represents a request that will be fulfilled sometime in the future, most usually by an asynchrous task executed on the Vert.x Event Loop. It allows you to assign handlers to deal with the return results of asynchronus tasks, and to flatten "pyramids of doom" or "callback hell".
@@ -115,6 +121,37 @@ public class Promise<T> extends AbstractPromise<T> {
   public Promise<T> fin(FinallyAction onFinally) {
     return this.promise(null, null, onFinally);
   }
+  
+  /**
+   * Combines multiple promises into a single promise that is resolved when all of the input promises are resolved
+   *
+   * @param promises array of promises
+   * @return Returns a single promise that will be resolved with a list of values, 
+   *         each value corresponding to the promise at the same index in the promises array. 
+   *         If any of the promises is resolved with a rejection, this resulting promise will 
+   *         be rejected with a list of values/exceptions.
+   */
+  @SuppressWarnings({"rawtypes" })
+  public static Promise<List> all(final Promise... promises) {
+    return (Promise<List>) AbstractPromise._all(Promise.class, promises);
+  }
+  
+  /**
+   * Combines multiple promises into a single promise that is resolved when all of the input promises are resolved, 
+   * before an timeout exception occurs. In case of timeout, result promise will be rejected with an TimeoutException
+   *
+   * @param timeout timeout in milliseconds
+   * @param promises array of promises
+   * @return Returns a single promise that will be resolved with a list of values, 
+   *         each value corresponding to the promise at the same index in the promises array. 
+   *         If any of the promises is resolved with a rejection, this resulting promise will 
+   *         be rejected with a list of values/exceptions.
+   */
+  @SuppressWarnings({"rawtypes" })
+  public static Promise<List> all(long timeout, final Promise... promises) {
+    return (Promise<List>) AbstractPromise._all(Promise.class, timeout, promises);
+  }
+
 
   @SuppressWarnings("unchecked")
   protected <O> Promise<O> promise(Function onFulfilled, Function onRejected, Function onFinally) {

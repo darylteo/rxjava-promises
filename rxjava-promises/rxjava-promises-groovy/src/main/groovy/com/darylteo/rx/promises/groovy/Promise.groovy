@@ -1,8 +1,9 @@
 package com.darylteo.rx.promises.groovy
 
-import com.darylteo.rx.promises.AbstractPromise
 import rx.functions.Action0
 import rx.functions.Func1
+
+import com.darylteo.rx.promises.AbstractPromise
 
 public class Promise<T> extends AbstractPromise<T> {
   public Promise() {
@@ -28,7 +29,36 @@ public class Promise<T> extends AbstractPromise<T> {
   public <O> Promise<O> fin(Closure<O> onFinally) {
     return this.promise(null, null, onFinally);
   }
+  
+  
+  public static Promise<List> all(final Promise... promises) {
+    return AbstractPromise._all(Promise.class, promises);
+  }
+  
+  /**
+   * Combines multiple promises into a single promise that is resolved when all of the input promises are resolved
+   *
+   * @param promises array of promises
+   * @return Returns a single promise that will be resolved with a list of values,
+   *         each value corresponding to the promise at the same index in the promises array.
+   *         If any of the promises is resolved with a rejection, this resulting promise will
+   *         be rejected with a list of values/exceptions.
+   */
+  public static Promise<List> all(long timeout, final Promise... promises) {
+    return AbstractPromise._all(Promise.class, timeout, promises);
+  }
 
+  /**
+   * Combines multiple promises into a single promise that is resolved when all of the input promises are resolved,
+   * before an timeout exception occurs. In case of timeout, result promise will be rejected with an TimeoutException
+   *
+   * @param timeout timeout in milliseconds
+   * @param promises array of promises
+   * @return Returns a single promise that will be resolved with a list of values,
+   *         each value corresponding to the promise at the same index in the promises array.
+   *         If any of the promises is resolved with a rejection, this resulting promise will
+   *         be rejected with a list of values/exceptions.
+   */
   private <O> Promise<O> promise(Closure<O> onFulfilled, Closure<O> onRejected, Closure<O> onFinally) {
     return (Promise<O>) super._then(onFulfilled as Func1<T, O>, onRejected as Func1<T, O>, onFinally as Action0<?>)
   }
