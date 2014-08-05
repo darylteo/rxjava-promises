@@ -6,13 +6,13 @@
 <dependency>
   <groupId>com.darylteo</groupId>
   <artifactId>rxjava-promises-{lang}</artifactId>
-  <version>1.1.2</version>
+  <version>1.2.0</version>
 </dependency>
 ````
 
 ## Gradle
 
-    compile 'com.darylteo:rxjava-promises-java:1.1.2'
+    compile 'com.darylteo:rxjava-promises-java:1.2.0'
 
 
 ## Documentation

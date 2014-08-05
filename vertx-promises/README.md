@@ -5,13 +5,13 @@
 <dependency>
   <groupId>com.darylteo.vertx</groupId>
   <artifactId>vertx-promises-{lang}</artifactId>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
 </dependency>
 ````
 ### mod.json
 ```javascript
 {
-  includes: "com.darylteo~vertx-promises-{lang}~1.1.0"
+  includes: "com.darylteo~vertx-promises-{lang}~1.2.0"
 }
 ````
 

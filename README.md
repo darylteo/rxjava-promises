@@ -16,8 +16,8 @@ in places where blocking calls are undesired.
 
 ### Releases 
 
-Core v1.1.2 - As of core v1.1.2, jars are targetted at Java 1.6 to support Android. See [#2](../../issues/2) 
-
+Core v1.1.2 - As of core v1.1.2, jars are targetted at Java 1.6 to support Android. See [#2](../../issues/2)
+Core v1.2.0 - Removes inheritance from Observable<>. Updated to rxjava 0.19.6.
 
 ### Versioning Information
 As there is a close dependency between the two subset of projects, the versioning strategy will be as follows:
