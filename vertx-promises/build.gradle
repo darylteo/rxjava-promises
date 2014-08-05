@@ -3,7 +3,7 @@ subprojects {
   apply from: rootProject.file('gradle/sonatype.gradle')
 
   group = 'com.darylteo.vertx'
-  version = '1.2.0-RC1'
+  version = '1.2.0'
 
   vertx {
     platform {
