@@ -11,7 +11,7 @@
 ### mod.json
 ```javascript
 {
-  includes: "com.darylteo~vertx-promises-{lang}~1.2.0"
+  includes: "com.darylteo.vertx~vertx-promises-{lang}~1.2.0"
 }
 ````
 
