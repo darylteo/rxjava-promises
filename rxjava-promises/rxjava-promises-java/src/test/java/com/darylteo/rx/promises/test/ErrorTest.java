@@ -82,7 +82,7 @@ public class ErrorTest {
 		Promise<String> initialPromise = new Promise<String>();
 		
 		initialPromise
-		.then(new ErrorThrowingClass(), new PromiseAction<Exception>() {
+		.then(new ErrorThrowingClass()).fail(new PromiseAction<Exception>() {
 			@Override
 			public void call(Exception t1) {
 				handled = true;
