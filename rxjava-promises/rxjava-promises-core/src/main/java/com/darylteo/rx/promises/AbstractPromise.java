@@ -2,6 +2,7 @@ package com.darylteo.rx.promises;
 
 import rx.Observable;
 import rx.Observer;
+import rx.exceptions.OnErrorThrowable;
 import rx.functions.*;
 import rx.subjects.ReplaySubject;
 
@@ -132,8 +133,8 @@ public abstract class AbstractPromise<T> implements Observer<T> {
             return;
           }
         } catch (Throwable e) {
-          // On any exception in the handlers above, we should throw the
-          // exception to the next promise
+          // if a throwable is given (instead of purely an Exception),
+          // we want to wrap it in a Exception
 
           deferred.reject(e);
         }
@@ -251,8 +252,16 @@ public abstract class AbstractPromise<T> implements Observer<T> {
     this.subject.onError(new Exception(reason.toString()));
   }
 
-  public void reject(Throwable reason) {
+  public void reject(Exception reason) {
     this.subject.onError(reason);
+  }
+
+  public void reject(Throwable reason) {
+    if (reason instanceof Exception) {
+      this.subject.onError(reason);
+    } else {
+      this.subject.onError(OnErrorThrowable.from(reason));
+    }
   }
 
   public void become(AbstractPromise<T> other) {

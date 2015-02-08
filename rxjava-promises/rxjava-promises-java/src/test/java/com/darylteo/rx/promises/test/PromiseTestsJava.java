@@ -3,6 +3,7 @@ package com.darylteo.rx.promises.test;
 import com.darylteo.rx.promises.java.Promise;
 import com.darylteo.rx.promises.java.functions.*;
 import org.junit.Test;
+import rx.exceptions.OnErrorThrowable;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -328,6 +329,32 @@ public class PromiseTestsJava {
 
     latch.await(2l, TimeUnit.SECONDS);
     assertFalse("Promise did not fail properly", flag.get());
+  }
+
+  @Test
+  public void testError() throws Exception {
+    final Promise<String> p = new Promise();
+    final CountDownLatch latch = new CountDownLatch(1);
+    final Result<Exception> result = new Result<Exception>();
+
+    p.then(new PromiseAction<String>() {
+      @Override
+      public void call(String s) {
+        throw new AssertionError("Hello World");
+      }
+    }).fail(new PromiseAction<Exception>() {
+      @Override
+      public void call(Exception e) {
+        result.value = e;
+        latch.countDown();
+      }
+    });
+
+    p.fulfill("Go");
+    latch.await(1, TimeUnit.SECONDS);
+    assertNotNull(result.value);
+    assertEquals(result.value.getClass(), OnErrorThrowable.class);
+    assertEquals(result.value.getCause().getClass(), AssertionError.class);
   }
 
   /* Fin with basic */
