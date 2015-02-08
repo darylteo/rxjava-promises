@@ -133,8 +133,8 @@ public abstract class AbstractPromise<T> implements Observer<T> {
             return;
           }
         } catch (Throwable e) {
-          // if a throwable is given (instead of purely an Exception),
-          // we want to wrap it in a Exception
+          // On any exception in the handlers above, we should throw the		+          // if a throwable is given (instead of purely an Exception),
+          // exception to the next promise
 
           deferred.reject(e);
         }
@@ -250,10 +250,6 @@ public abstract class AbstractPromise<T> implements Observer<T> {
 
   public void reject(Object reason) {
     this.subject.onError(new Exception(reason.toString()));
-  }
-
-  public void reject(Exception reason) {
-    this.subject.onError(reason);
   }
 
   public void reject(Throwable reason) {
