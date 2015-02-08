@@ -133,7 +133,7 @@ public abstract class AbstractPromise<T> implements Observer<T> {
             return;
           }
         } catch (Throwable e) {
-          // On any exception in the handlers above, we should throw the		+          // if a throwable is given (instead of purely an Exception),
+          // On any exception in the handlers above, we should throw the
           // exception to the next promise
 
           deferred.reject(e);
