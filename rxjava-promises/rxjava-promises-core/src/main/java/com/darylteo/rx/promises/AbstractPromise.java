@@ -43,6 +43,9 @@ public abstract class AbstractPromise<T> implements Observer<T> {
   }
 
   public Throwable getReason() {
+    if (this.reason != null && WrappedError.class.isAssignableFrom(reason.getClass())) {
+    	return ((WrappedError)this.reason).unwrap();
+    }
     return this.reason;
   }
 
@@ -131,11 +134,12 @@ public abstract class AbstractPromise<T> implements Observer<T> {
             evaluateRejected();
             return;
           }
-        } catch (Throwable e) {
+        } catch (Error e) {
           // On any exception in the handlers above, we should throw the
           // exception to the next promise
-
           deferred.reject(e);
+        } catch (Throwable e) {
+        	deferred.reject(e);
         }
       }
 
@@ -249,6 +253,10 @@ public abstract class AbstractPromise<T> implements Observer<T> {
 
   public void reject(Object reason) {
     this.subject.onError(new Exception(reason.toString()));
+  }
+  
+  public void reject(Error e) {
+	  this.subject.onError(new WrappedError(e));
   }
 
   public void reject(Throwable reason) {
