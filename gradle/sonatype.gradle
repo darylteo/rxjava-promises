@@ -2,8 +2,8 @@ apply plugin: 'maven'
 apply plugin: 'signing'
 
 def release = { !project.version.endsWith('-SNAPSHOT') }
-def sonatypeUsername = { project.sonatypeUsername ?: '' }
-def sonatypePassword = { project.sonatypePassword ?: '' }
+def sonatypeUsername = { project.hasProperty('sonatypeUsername') ? project.sonatypeUsername : '' }
+def sonatypePassword = { project.hasProperty('sonatypePassword') ? project.sonatypePassword : '' }
 
 configurations { archives }
 
