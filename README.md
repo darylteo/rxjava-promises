@@ -16,6 +16,10 @@ Yes, unfortunately, I had copied a Gradle template when originally. Therefore, t
 
 Please ignore it. For all source in this repository, everything is "do whatever you want with it", and provided as is.
 
+### Do you recommend anything else? ###
+
+Yes! I have recently found RxJava to be highly adequate for more general use cases where one would have previously preferred a Promise. A PublishSubject is essentially what you want. 
+
 ## What is it? ##
 
 Promises is a pattern for callback-based flow control. This particular implementation of Promises is useful
