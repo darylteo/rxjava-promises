@@ -2,6 +2,20 @@
 
 Promises library for JVM based languages
 
+## IMPORTANT NOTE ##
+
+Hi all! Unfortunately, this library was built at a stage where RxJava was not very mature, and my experience in OSS was quite poor, so here are some questions frequently asked.
+
+### Are you still maintaining this? ###
+
+No I am not. However, many employers still ask for your GitHub profile to show some sort of self-driven initiative, so I leave this repository here publicly. If you have any need for changes, please fork.
+
+### Talking about Forks - what license is this under? ###
+
+Yes, unfortunately, I had copied a Gradle template when originally. Therefore, the artifacts being produced are indicated as being Apache licensed. 
+
+Please ignore it. For all source in this repository, everything is "do whatever you want with it", and provided as is.
+
 ## What is it? ##
 
 Promises is a pattern for callback-based flow control. This particular implementation of Promises is useful
